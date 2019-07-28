@@ -59,14 +59,13 @@ flutter:
   fonts:
     - family: Roboto
       fonts:
-        - asset: fonts\Roboto\Roboto-Regular.ttf
-        - asset: fonts\Roboto\Roboto-RegularItalic.ttf
+        - asset: fonts\Roboto-Regular.ttf
+        - asset: fonts\Roboto-RegularItalic.ttf
           style: italic
-    - family: RobotoBold
-      fonts:
-        - asset: fonts\Roboto\Roboto-Black.ttf
-        - asset: fonts\Roboto\Roboto-Bold.ttf
+        - asset: fonts\Roboto-Bold.ttf
           weight: 700
+        - asset: fonts\Roboto-Thin.ttf
+          weight: 300
   
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
