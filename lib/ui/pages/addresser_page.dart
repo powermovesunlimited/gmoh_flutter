@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gmoh_app/io/database/location_database.dart';
+
 
 class AddresserPage extends StatelessWidget {
+  LocationDatabase database;
   @override
   Widget build(BuildContext context) {
     return Column(

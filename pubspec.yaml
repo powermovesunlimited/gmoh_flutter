@@ -17,6 +17,10 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  path: ^1.6.2
+  path_provider: ^1.2.0
+  sqflite: ^1.1.6
+  rxdart: ^0.20.0
   flutter:
     sdk: flutter
 
@@ -60,6 +64,7 @@ flutter:
     - family: Roboto
       fonts:
         - asset: fonts\Roboto-Regular.ttf
+          weight: 400
         - asset: fonts\Roboto-RegularItalic.ttf
           style: italic
         - asset: fonts\Roboto-Bold.ttf
