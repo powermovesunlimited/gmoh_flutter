@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          body: RidePartyPage(),
+          body:  AddresserPage(),
         ));
   }
 }
