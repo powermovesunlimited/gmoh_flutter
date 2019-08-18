@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gmoh_app/ui/pages/addresser_page.dart';
-import 'package:gmoh_app/ui/pages/ride_party_page.dart';
-
-
 
 void main() => runApp(MyApp());
 
