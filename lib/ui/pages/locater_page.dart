@@ -23,8 +23,6 @@ class _LocatorPageState extends State<LocatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // child: child, 
-    );
+    return Container();
   }
 }
