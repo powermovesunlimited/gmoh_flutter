@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gmoh_app/ui/pages/addresser_page.dart';
+import 'package:gmoh_app/ui/pages/map.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          body: AddresserPage(),
+          body: MyAppState(),
         ));
   }
 }
