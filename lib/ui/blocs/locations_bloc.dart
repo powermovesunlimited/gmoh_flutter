@@ -5,21 +5,22 @@ import 'package:rxdart/subjects.dart';
 
 class LocationsBloc implements BlocBase {
   final LocationRepository _repository;
-  final PublishSubject<List<Location>> _resultSubject =
-      PublishSubject<List<Location>>();
+  final PublishSubject<Location> _resultSubject =
+      PublishSubject<Location>();
   get locationDataObservable => _resultSubject;
 
   LocationsBloc(this._repository);
 
   @override
   void dispose() {
+    _repository.dispose();
     _resultSubject.close();
   }
 
-  void getHomeLocation() async {
+  getHomeLocation() async {
     Location location = await _repository.getHomeLocation();
     if(location != null){
-      _resultSubject.add(List.of([location]));
+      _resultSubject.add(location);
     }
   }
 
@@ -28,7 +29,7 @@ class LocationsBloc implements BlocBase {
       null,
       longitude,
       latitude,
-      'home'
+      LocationType.HOME
     );
     _repository.saveHomeLocation(homeLocation);
   }

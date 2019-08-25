@@ -5,9 +5,8 @@ import 'package:gmoh_app/ui/blocs/locations_bloc.dart';
 
 class LocatorPage extends StatefulWidget {
   static const String routeName = "/locatorPage";
-  final bool isGoingHome;
 
-  LocatorPage(this.isGoingHome);
+  LocatorPage();
 
   _LocatorPageState createState() => _LocatorPageState();
 }
@@ -18,11 +17,16 @@ class _LocatorPageState extends State<LocatorPage> {
   @override
   void initState() {
     super.initState();
-    bloc.getHomeLocation();
   }
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return Container ();
+=======
+    return Container(
+      child: Container(),
+    );
+>>>>>>> implement action selection page, add location bloc test
   }
 }

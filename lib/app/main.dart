@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:gmoh_app/ui/pages/addresser_page.dart';
 import 'package:gmoh_app/ui/pages/map.dart';
+=======
+import 'package:gmoh_app/ui/pages/action_selection_page.dart';
+>>>>>>> implement action selection page, add location bloc test
 
 void main() => runApp(MyApp());
 
@@ -21,7 +25,11 @@ class MyApp extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
+<<<<<<< HEAD
           body: MyAppState(),
+=======
+          body: ActionSelectionPage(),
+>>>>>>> implement action selection page, add location bloc test
         ));
   }
 }
