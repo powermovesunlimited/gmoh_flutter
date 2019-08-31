@@ -11,7 +11,7 @@ class BlocProvider<T extends BlocBase> extends StatefulWidget {
     Key key,
     @required this.child,
     @required this.bloc,
-  }): super (key: key)
+  }): super (key: key);
 
 ;
   static T of<T extends BlocBase>(BuildContext context){
