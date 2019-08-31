@@ -21,12 +21,8 @@ class _LocatorPageState extends State<LocatorPage> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    return Container ();
-=======
     return Container(
       child: Container(),
     );
->>>>>>> implement action selection page, add location bloc test
   }
 }
