@@ -14,14 +14,17 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   path: ^1.6.2
   path_provider: ^1.2.0
   sqflite: ^1.1.6
-  rxdart: ^0.20.0
+  rxdart: ^0.22.0
   google_maps_flutter: ^0.4.0
+  dio: ^2.1.16
+  google_maps_webservice: ^0.0.14
+  fluro: "^1.5.1"
   flutter:
     sdk: flutter
 
@@ -73,6 +76,9 @@ flutter:
           weight: 700
         - asset: fonts\Roboto-Thin.ttf
           weight: 300
+
+  assets:
+  - secrets.json
   
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

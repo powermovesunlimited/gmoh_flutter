@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gmoh_app/io/models/location_model.dart';
 import 'package:gmoh_app/io/repository/location_repo.dart';
-import 'package:gmoh_app/ui/blocs/locations_bloc.dart';
+import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
 import 'package:mockito/mockito.dart';
 import 'dart:async';
 
@@ -21,7 +21,7 @@ main() => {
     when(mockLocationRepository.getHomeLocation())
       .thenAnswer((_) => Future.value(testHomeLocation));
 
-    final locationBloc = LocationsBloc(mockLocationRepository);
+    final locationBloc = UserLocationsBloc(mockLocationRepository);
 
     scheduleMicrotask((){
       locationBloc.getHomeLocation();

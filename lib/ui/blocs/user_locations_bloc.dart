@@ -3,13 +3,13 @@ import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/bloc_provider.dart';
 import 'package:rxdart/subjects.dart';
 
-class LocationsBloc implements BlocBase {
+class UserLocationsBloc implements BlocBase {
   final LocationRepository _repository;
   final PublishSubject<Location> _resultSubject =
       PublishSubject<Location>();
   get locationDataObservable => _resultSubject;
 
-  LocationsBloc(this._repository);
+  UserLocationsBloc(this._repository);
 
   @override
   void dispose() {

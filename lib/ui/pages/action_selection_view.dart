@@ -44,7 +44,7 @@ class ActionSelectionView extends StatelessWidget {
                   noticeText = new Text(
                       "Location: Lat=${(homeLocationResult as HomeLocationSet).location.latitude} Lng=${(homeLocationResult as HomeLocationSet).location.longitude}");
                 } else if (homeLocationResult is HomeLocationNotSet) {
-                  noticeText = new Text("No Location Set");
+                  Navigator.pushNamed(context, 'locator_page/true');
                 }
                 Scaffold.of(context).showSnackBar(new SnackBar(
                   content: noticeText,
@@ -67,7 +67,9 @@ class ActionSelectionView extends StatelessWidget {
               color: Colors.deepPurple,
               textColor: Colors.white,
               elevation: 4,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, 'locator_page/false');
+              },
             ),
           ),
         ),
