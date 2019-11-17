@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/io/models/place_search_response.dart';
 import 'package:gmoh_app/io/repository/destinations_search_repo.dart';
 import 'package:gmoh_app/ui/models/error_model.dart';
@@ -12,12 +13,12 @@ DestinationSearchBloc {
   get placeSuggestionObservable => _subject;
   DestinationSearchBloc(this._searchRepository);
 
-  searchPlacesByQuery(String searchText) async {
+  searchPlacesByQuery(String searchText, [Position userPosition]) async {
     if (searchText == null || searchText.isEmpty) {
       return _subject.add(DestinationSearchResult(List(), null));
     } else {
       PlaceSearchResponse response =
-          await _searchRepository.searchPlacesByQuery(searchText);
+          await _searchRepository.searchPlacesByQuery(searchText, userPosition);
       if (response.errorMessage == null) {
         final suggestions = response.placeSearchPredictions.map((prediction) =>
             PlaceSuggestion(prediction.structuredFormatting.mainText,

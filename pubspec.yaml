@@ -25,6 +25,8 @@ dependencies:
   dio: ^2.1.16
   google_maps_webservice: ^0.0.14
   fluro: "^1.5.1"
+  permission_handler: ^3.1.0
+  geolocator: ^3.0.1
   flutter:
     sdk: flutter
 

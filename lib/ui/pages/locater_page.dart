@@ -1,26 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
 import 'package:gmoh_app/io/repository/destinations_search_repo.dart';
 import 'package:gmoh_app/ui/blocs/destination_search_bloc.dart';
+import 'package:gmoh_app/ui/models/locator_page_model.dart';
+import 'package:gmoh_app/util/permissions_helper.dart';
 import 'package:gmoh_app/util/titled_divider.dart';
 import 'package:rxdart/subjects.dart';
 
 class LocatorPage extends StatefulWidget {
   static const String routeName = "/locatorPage";
-  final bool _isGoingHome;
+  final String _pageModeValue;
+  LocatorPage(this._pageModeValue);
 
-  LocatorPage(this._isGoingHome);
-
-  _LocatorPageState createState() => _LocatorPageState(_isGoingHome);
+  _LocatorPageState createState() => _LocatorPageState(getPageModeFromString(_pageModeValue));
 }
 
-class _LocatorPageState extends State<LocatorPage> {
-  final bool _isGoingHome;
-  final onTextChangedListener = new PublishSubject<String>();
+class _LocatorPageState extends State<LocatorPage>
+    implements PermissionDialogListener {
+  _LocatorPageState(this._locationPageMode);
 
   DestinationSearchBloc bloc =
       DestinationSearchBloc(DestinationSearchRepository(GoogleApiService()));
-  _LocatorPageState(this._isGoingHome);
+
+  var hasRequestedLocationPermission = false;
+  final onTextChangedListener = new PublishSubject<String>();
+  final permissionsHelper = new PermissionsHelper();
+  Position userPosition;
+
+  final LocationPageMode _locationPageMode;
 
   @override
   void initState() {
@@ -30,17 +38,46 @@ class _LocatorPageState extends State<LocatorPage> {
         .listen((searchText) {
       getLocationResults(searchText);
     });
+    attemptToRetrieveUserPosition();
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: bloc.placeSuggestionObservable.stream,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          DestinationSearchResult result = snapshot.data;
-          return buildContentView(result);
-        });
+  void onPermissionDenied() {
+    hasRequestedLocationPermission = true;
+  }
+
+  @override
+  void onRequestPermission() {
+    setState(() {
+      permissionsHelper.requestLocationPermission();
+      hasRequestedLocationPermission = true;
+    });
+  }
+
+  void attemptToRetrieveUserPosition() async {
+    var locationPermissionGranted =
+        await permissionsHelper.isLocationPermissionGranted();
+    if (!locationPermissionGranted && !hasRequestedLocationPermission) {
+      requestLocationPermission();
+      return;
+    } else if (locationPermissionGranted) {
+      Position position = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        userPosition = position;
+      });
+    }
+  }
+
+  void requestLocationPermission() async {
+    if (await permissionsHelper.requestLocationPermission()) {
+      setState(() {
+        hasRequestedLocationPermission = true;
+      });
+    } else {
+      permissionsHelper.onLocationPermissionDenied(context, this);
+    }
   }
 
   Scaffold buildContentView(DestinationSearchResult searchResult) {
@@ -76,10 +113,15 @@ class _LocatorPageState extends State<LocatorPage> {
   }
 
   String getHintText() {
-    if (_isGoingHome) {
-      return "Enter your Home Address...";
-    } else {
-      return "Enter your Destination Address";
+    switch (_locationPageMode) {
+      case LocationPageMode.HOME_LOCATION:
+        return "Enter your Home Address...";
+      case LocationPageMode.NEW_LOCATION:
+        return "Enter your Destination Address";
+      case LocationPageMode.ORIGIN:
+        return "Enter where you want to be picked up from";
+      default:
+        return "Enter an Address";
     }
   }
 
@@ -94,7 +136,7 @@ class _LocatorPageState extends State<LocatorPage> {
 
   void getLocationResults(String searchText) async {
     setState(() {
-      bloc.searchPlacesByQuery(searchText);
+      bloc.searchPlacesByQuery(searchText, userPosition);
     });
   }
 
@@ -132,10 +174,25 @@ class _LocatorPageState extends State<LocatorPage> {
   }
 
   Text getAppBarTitle() {
-    if (_isGoingHome) {
-      return Text("Where's Home?");
-    } else {
-      return Text("Where to exactly?");
+    switch (_locationPageMode) {
+      case LocationPageMode.HOME_LOCATION:
+        return Text("Where's Home?");
+      case LocationPageMode.NEW_LOCATION:
+        return Text("Where to exactly?");
+      case LocationPageMode.ORIGIN:
+        return Text("Enter a starting point?");
+      default:
+        return Text("Enter a starting point?");
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+        stream: bloc.placeSuggestionObservable.stream,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          DestinationSearchResult result = snapshot.data;
+          return buildContentView(result);
+        });
   }
 }

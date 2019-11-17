@@ -16,11 +16,11 @@ class AppRouter {
 
   static Handler _locatorPageHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
-          LocatorPage(params['isGoingHome'][0] == 'true'));
+          LocatorPage(params['mode'][0]));
 
   static void setupRouter() {
     router.define('action_selection', handler: _actionSelectionHandler);
     router.define('ride_party_page', handler: _ridePartyPageHandler);
-    router.define('locator_page/:isGoingHome', handler: _locatorPageHandler);
+    router.define('locator_page/:mode', handler: _locatorPageHandler);
   }
 }

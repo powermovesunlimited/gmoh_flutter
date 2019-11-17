@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gmoh_app/io/models/home_location_result.dart';
+import 'package:gmoh_app/ui/models/locator_page_model.dart';
 
 class ActionSelectionView extends StatelessWidget {
   final HomeLocationResult homeLocationResult;
@@ -39,16 +40,16 @@ class ActionSelectionView extends StatelessWidget {
               textColor: Colors.white,
               elevation: 4,
               onPressed: () {
-                var noticeText;
                 if (homeLocationResult is HomeLocationSet) {
-                  noticeText = new Text(
+                  final noticeText = new Text(
                       "Location: Lat=${(homeLocationResult as HomeLocationSet).location.latitude} Lng=${(homeLocationResult as HomeLocationSet).location.longitude}");
+                  Scaffold.of(context).showSnackBar(new SnackBar(
+                    content: noticeText,
+                  ));
                 } else if (homeLocationResult is HomeLocationNotSet) {
                   Navigator.pushNamed(context, 'locator_page/true');
                 }
-                Scaffold.of(context).showSnackBar(new SnackBar(
-                  content: noticeText,
-                ));
+
               },
             ),
           ),
@@ -68,7 +69,8 @@ class ActionSelectionView extends StatelessWidget {
               textColor: Colors.white,
               elevation: 4,
               onPressed: () {
-                Navigator.pushNamed(context, 'locator_page/false');
+                var newLocation = LocationPageMode.NEW_LOCATION.toString();
+                Navigator.pushNamed(context, 'locator_page/$newLocation');
               },
             ),
           ),
