@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:gmoh_app/io/models/place_details_response.dart';
 import 'package:gmoh_app/io/models/place_search_response.dart';
 import 'package:gmoh_app/util/secret_loader.dart';
 
@@ -26,6 +27,24 @@ class GoogleApiService {
     }
   }
 
+  Future<PlaceDetailsResponse> fetchPlaceDetails(placeId) async {
+    final secret = await SecretLoader(secretPath: "secrets.json").load();
+    try {
+      Response response = await _dioClient.get(_buildPlaceDetailsEndPoint(
+          placeId, secret.googleApiKey));
+      final json = response.data;
+      if (json != null) {
+        return PlaceDetailsResponse.fromJson(json);
+      } else {
+        return PlaceDetailsResponse.onError(
+            "Response data was empty: ${response.data['status']}");
+      }
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return PlaceDetailsResponse.onError(error);
+    }
+  }
+
   String _buildPlaceSearchEndPoint(searchText, apiKey,
       [Position userPosition]) {
     if (userPosition != null) {
@@ -33,5 +52,9 @@ class GoogleApiService {
     } else {
       return "${_domain}maps/api/place/autocomplete/json?input=$searchText&key=$apiKey";
     }
+  }
+
+ String _buildPlaceDetailsEndPoint(placeId, apiKey) {
+      return "${_domain}maps/api/place/details/json?place_id=$placeId&key=$apiKey";
   }
 }

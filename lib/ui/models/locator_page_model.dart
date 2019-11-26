@@ -2,7 +2,7 @@ enum LocationPageMode { HOME_LOCATION, NEW_LOCATION, ORIGIN }
 
 LocationPageMode getPageModeFromString(String pageMode) {
   return LocationPageMode.values
-      .firstWhere((mode) => mode.toString() == pageMode);
+      .firstWhere((mode) => getStringFromEnum(mode) == pageMode);
 }
 
 String getStringFromEnum(LocationPageMode pageEnum){

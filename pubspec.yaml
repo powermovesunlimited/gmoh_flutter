@@ -26,7 +26,7 @@ dependencies:
   google_maps_webservice: ^0.0.14
   fluro: "^1.5.1"
   permission_handler: ^3.1.0
-  geolocator: ^3.0.1
+  geolocator: ^5.1.5
   flutter:
     sdk: flutter
 
@@ -70,13 +70,13 @@ flutter:
   fonts:
     - family: Roboto
       fonts:
-        - asset: fonts\Roboto-Regular.ttf
+        - asset: fonts/Roboto-Regular.ttf
           weight: 400
-        - asset: fonts\Roboto-RegularItalic.ttf
+        - asset: fonts/Roboto-RegularItalic.ttf
           style: italic
-        - asset: fonts\Roboto-Bold.ttf
+        - asset: fonts/Roboto-Bold.ttf
           weight: 700
-        - asset: fonts\Roboto-Thin.ttf
+        - asset: fonts/Roboto-Thin.ttf
           weight: 300
 
   assets:

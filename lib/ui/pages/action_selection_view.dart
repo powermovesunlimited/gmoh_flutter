@@ -47,7 +47,7 @@ class ActionSelectionView extends StatelessWidget {
                     content: noticeText,
                   ));
                 } else if (homeLocationResult is HomeLocationNotSet) {
-                  Navigator.pushNamed(context, 'locator_page/true');
+                  Navigator.pushNamed(context, 'locator_page/${getStringFromEnum(LocationPageMode.HOME_LOCATION)}');
                 }
 
               },

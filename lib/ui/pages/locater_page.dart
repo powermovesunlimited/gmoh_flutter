@@ -2,25 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
 import 'package:gmoh_app/io/repository/destinations_search_repo.dart';
+import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/destination_search_bloc.dart';
+import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
 import 'package:gmoh_app/ui/models/locator_page_model.dart';
 import 'package:gmoh_app/util/permissions_helper.dart';
 import 'package:gmoh_app/util/titled_divider.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:gmoh_app/io/database/location_database.dart';
+
 
 class LocatorPage extends StatefulWidget {
   static const String routeName = "/locatorPage";
-  final String _pageModeValue;
+  final LocationPageMode _pageModeValue;
   LocatorPage(this._pageModeValue);
 
-  _LocatorPageState createState() => _LocatorPageState(getPageModeFromString(_pageModeValue));
+  _LocatorPageState createState() => _LocatorPageState(_pageModeValue);
 }
 
 class _LocatorPageState extends State<LocatorPage>
     implements PermissionDialogListener {
   _LocatorPageState(this._locationPageMode);
+  UserLocationsBloc _locationBloc;
 
-  DestinationSearchBloc bloc =
+
+  DestinationSearchBloc _bloc =
       DestinationSearchBloc(DestinationSearchRepository(GoogleApiService()));
 
   var hasRequestedLocationPermission = false;
@@ -40,6 +46,8 @@ class _LocatorPageState extends State<LocatorPage>
     });
     attemptToRetrieveUserPosition();
     super.initState();
+    var locationDatabase = LocationDatabase();
+    _locationBloc = UserLocationsBloc(LocationRepository(locationDatabase));
   }
 
   @override
@@ -128,15 +136,33 @@ class _LocatorPageState extends State<LocatorPage>
   Expanded buildSuggestionList(DestinationSearchResult searchResult) {
     return Expanded(
         child: ListView.builder(
-      itemCount: searchResult.results.length,
-      itemBuilder: (BuildContext context, int index) =>
-          createSuggestionItemView(context, index, searchResult),
-    ));
+          itemCount: searchResult.results.length,
+          itemBuilder: (BuildContext context, int index) =>
+              GestureDetector(
+                child: createSuggestionItemView(context, index, searchResult),
+                onTap: () async {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Center(child: CircularProgressIndicator(),);
+                      });
+
+                  final placeDetails = await _bloc.getPlaceDetails(
+                      searchResult.results[index].placeId);
+                  final latitude = placeDetails.geometry.location.lat;
+                  final longitude = placeDetails.geometry.location.lng;
+                  _locationBloc.setHomeLocation(
+                      latitude,
+                      longitude);
+                  Navigator.pushNamed(context, 'map/$latitude,$longitude');
+                },
+              ),
+        ));
   }
 
   void getLocationResults(String searchText) async {
     setState(() {
-      bloc.searchPlacesByQuery(searchText, userPosition);
+      _bloc.searchPlacesByQuery(searchText, userPosition);
     });
   }
 
@@ -189,7 +215,7 @@ class _LocatorPageState extends State<LocatorPage>
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: bloc.placeSuggestionObservable.stream,
+        stream: _bloc.placeSuggestionObservable.stream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           DestinationSearchResult result = snapshot.data;
           return buildContentView(result);
