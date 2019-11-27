@@ -6,12 +6,13 @@ import 'package:gmoh_app/ui/models/place_suggestion.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:rxdart/subjects.dart';
 
-class 
-DestinationSearchBloc {
+class DestinationSearchBloc {
   final DestinationSearchRepository _searchRepository;
   final PublishSubject<DestinationSearchResult> _subject =
       PublishSubject<DestinationSearchResult>();
+
   get placeSuggestionObservable => _subject;
+
   DestinationSearchBloc(this._searchRepository);
 
   searchPlacesByQuery(String searchText, [Position userPosition]) async {
@@ -21,12 +22,16 @@ DestinationSearchBloc {
       PlaceSearchResponse response =
           await _searchRepository.searchPlacesByQuery(searchText, userPosition);
       if (response.errorMessage == null) {
-        final suggestions = response.placeSearchPredictions.map((prediction) =>
-            PlaceSuggestion(prediction.structuredFormatting.mainText,
-                prediction.structuredFormatting.secondaryText, prediction.placeId)).toList();
+        final suggestions = response.placeSearchPredictions
+            .map((prediction) => PlaceSuggestion(
+                prediction.structuredFormatting.mainText,
+                prediction.structuredFormatting.secondaryText,
+                prediction.placeId))
+            .toList();
         _subject.add(DestinationSearchResult(suggestions, null));
       } else {
-        _subject.add(DestinationSearchResult(List(), ErrorState(response.errorMessage)));
+        _subject.add(
+            DestinationSearchResult(List(), ErrorState(response.errorMessage)));
       }
     }
   }
@@ -39,5 +44,6 @@ DestinationSearchBloc {
 class DestinationSearchResult {
   final List<PlaceSuggestion> results;
   final ErrorState errorState;
+
   DestinationSearchResult(this.results, this.errorState);
 }
