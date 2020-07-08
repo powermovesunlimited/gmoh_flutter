@@ -3,32 +3,33 @@ import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/bloc_provider.dart';
 import 'package:rxdart/subjects.dart';
 
-class LocationsBloc implements BlocBase {
+class UserLocationsBloc implements BlocBase {
   final LocationRepository _repository;
-  final PublishSubject<List<Location>> _resultSubject =
-      PublishSubject<List<Location>>();
+  final PublishSubject<Location> _resultSubject =
+      PublishSubject<Location>();
   get locationDataObservable => _resultSubject;
 
-  LocationsBloc(this._repository);
+  UserLocationsBloc(this._repository);
 
   @override
   void dispose() {
+    _repository.dispose();
     _resultSubject.close();
   }
 
-  void getHomeLocation() async {
+  getHomeLocation() async {
     Location location = await _repository.getHomeLocation();
     if(location != null){
-      _resultSubject.add(List.of([location]));
+      _resultSubject.add(location);
     }
   }
 
-  void setHomeLocation(double longitude, double latitude){
+  void setHomeLocation(double latitude, double longitude){
     final homeLocation = Location(
       null,
-      longitude,
-      latitude,
-      'home'
+        latitude,
+        longitude,
+      LocationType.HOME
     );
     _repository.saveHomeLocation(homeLocation);
   }

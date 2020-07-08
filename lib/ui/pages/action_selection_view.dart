@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gmoh_app/io/database/location_database.dart';
+import 'package:gmoh_app/io/models/home_location_result.dart';
+import 'package:gmoh_app/ui/models/locator_page_model.dart';
 
+class ActionSelectionView extends StatelessWidget {
+  final HomeLocationResult homeLocationResult;
+  ActionSelectionView(this.homeLocationResult);
 
-class AddresserPage extends StatelessWidget {
-  LocationDatabase database;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,7 +39,18 @@ class AddresserPage extends StatelessWidget {
               color: Colors.cyan,
               textColor: Colors.white,
               elevation: 4,
-              onPressed: () {},
+              onPressed: () {
+                if (homeLocationResult is HomeLocationSet) {
+                  final noticeText = new Text(
+                      "Location: Lat=${(homeLocationResult as HomeLocationSet).location.latitude} Lng=${(homeLocationResult as HomeLocationSet).location.longitude}");
+                  Scaffold.of(context).showSnackBar(new SnackBar(
+                    content: noticeText,
+                  ));
+                } else if (homeLocationResult is HomeLocationNotSet) {
+                  Navigator.pushNamed(context, 'locator_page/${getStringFromEnum(LocationPageMode.HOME_LOCATION)}');
+                }
+
+              },
             ),
           ),
         ),
@@ -55,7 +68,10 @@ class AddresserPage extends StatelessWidget {
               color: Colors.deepPurple,
               textColor: Colors.white,
               elevation: 4,
-              onPressed: () {},
+              onPressed: () {
+                var newLocation = getStringFromEnum(LocationPageMode.NEW_LOCATION);
+                Navigator.pushNamed(context, 'locator_page/${newLocation}');
+              },
             ),
           ),
         ),

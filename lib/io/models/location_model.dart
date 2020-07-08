@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
+
 class Location{
   final int id;
   final double longitude;
   final double latitude;
-  final String type;
+  final LocationType type;
   Location(this.id, this.longitude, this.latitude, this.type);
 
   Map<String, dynamic> toMap() {
@@ -10,7 +12,11 @@ class Location{
     map['id'] = id;
     map['longitude'] = longitude;
     map['latitude'] = latitude;
-    map['type'] = type;
+    map['type'] = describeEnum(type);
     return map;
   }
+}
+
+enum LocationType {
+  HOME,
 }
