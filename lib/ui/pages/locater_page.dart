@@ -40,7 +40,6 @@ class _LocatorPageState extends State<LocatorPage>
   void initState() {
     onTextChangedListener
         .distinct()
-        .debounceTime(Duration(milliseconds: 400))
         .listen((searchText) {
       getLocationResults(searchText);
     });
