@@ -5,7 +5,23 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:4.0.0'
+        classpath 'com.google.gms:google-services:4.3.3'
+    }
+
+    subprojects {
+        project.configurations.all {
+            resolutionStrategy.eachDependency { details ->
+                if (details.requested.group == 'androidx.core'
+                        && !details.requested.name.contains('androidx') ) {
+                    details.useVersion "1.0.1"
+                }
+                 if (details.requested.group == 'com.android.support'
+                        && !details.requested.name.contains('multidex') ) {
+                    details.useVersion "27.1.1"
+                }
+            }
+        }
     }
 }
 
@@ -19,15 +35,9 @@ allprojects {
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
     project.evaluationDependsOn(':app')
-    project.configurations.all {
-            resolutionStrategy.eachDependency { details ->
-                if (details.requested.group == 'androidx.core'
-                        && !details.requested.name.contains('androidx') ) {
-                    details.useVersion "1.0.1"
-                }
-            }
-        }
 }
 task clean(type: Delete) {
     delete rootProject.buildDir
