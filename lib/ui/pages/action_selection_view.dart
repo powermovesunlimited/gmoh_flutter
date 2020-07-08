@@ -47,7 +47,7 @@ class ActionSelectionView extends StatelessWidget {
                     content: noticeText,
                   ));
                 } else if (homeLocationResult is HomeLocationNotSet) {
-                  Navigator.pushNamed(context, 'locator_page/true');
+                  Navigator.pushNamed(context, 'locator_page/${getStringFromEnum(LocationPageMode.HOME_LOCATION)}');
                 }
 
               },
@@ -69,8 +69,8 @@ class ActionSelectionView extends StatelessWidget {
               textColor: Colors.white,
               elevation: 4,
               onPressed: () {
-                var newLocation = LocationPageMode.NEW_LOCATION.toString();
-                Navigator.pushNamed(context, 'locator_page/$newLocation');
+                var newLocation = getStringFromEnum(LocationPageMode.NEW_LOCATION);
+                Navigator.pushNamed(context, 'locator_page/${newLocation}');
               },
             ),
           ),

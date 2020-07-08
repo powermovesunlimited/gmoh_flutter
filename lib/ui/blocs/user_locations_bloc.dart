@@ -24,11 +24,11 @@ class UserLocationsBloc implements BlocBase {
     }
   }
 
-  void setHomeLocation(double longitude, double latitude){
+  void setHomeLocation(double latitude, double longitude){
     final homeLocation = Location(
       null,
-      longitude,
-      latitude,
+        latitude,
+        longitude,
       LocationType.HOME
     );
     _repository.saveHomeLocation(homeLocation);
