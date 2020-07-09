@@ -33,11 +33,20 @@ class _ActionSelectionPageState extends State<ActionSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-          title: Text(
-        "Get Me Outta Here!",
-        textAlign: TextAlign.center,
-      )),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  //Todo
+                });
+          },
+        ),
+      ),
       body: StreamBuilder(
         stream: _locationBloc.locationDataObservable.stream,
         builder: (BuildContext context, AsyncSnapshot<Location> snapshot) {
