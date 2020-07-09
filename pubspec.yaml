@@ -97,7 +97,9 @@ flutter:
           weight: 300
 
   assets:
-  - secrets.json
+   - secrets.json
+   - assets/images/background1300.png
+   - assets/images/homeIcon.png
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
