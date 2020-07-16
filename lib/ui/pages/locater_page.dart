@@ -150,7 +150,9 @@ class _LocatorPageState extends State<LocatorPage>
                       searchResult.results[index].placeId);
                   final latitude = placeDetails.geometry.location.lat;
                   final longitude = placeDetails.geometry.location.lng;
+                  final address =  placeDetails.formattedAddress;
                   _locationBloc.setHomeLocation(
+                    address,
                       latitude,
                       longitude);
                   Navigator.pushNamed(context, 'map/$latitude,$longitude');

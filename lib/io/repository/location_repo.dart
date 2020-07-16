@@ -6,8 +6,8 @@ class LocationRepository {
   final LocationDatabase _database;
   LocationRepository(this._database);
 
-  Future<Location> getHomeLocation() async {
-    return await _database.getLocationByType(describeEnum(LocationType.HOME));
+  Future<Location> getHomeLocation() {
+    return _database.getLocationByType(describeEnum(LocationType.HOME));
   }
 
   saveHomeLocation(Location location) async {
