@@ -61,10 +61,13 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> {
                         ),
                       ),
                       Container(
-                        alignment: Alignment.bottomCenter,
+                        alignment: Alignment(.9, .6),
                         child: Text(
                           "Im a Rida",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     ],
@@ -72,30 +75,35 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> {
                   Container(
                     margin: EdgeInsets.only(
                         top: 10.0, right: 15.0, left: 15.0, bottom: 10.0),
-                    width: double.infinity,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white),
-                    child: Center(
-                        child:
-                            Text(address != null ? address : "No Home Address Set")),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        top: 10.0, right: 15.0, left: 15.0, bottom: 10.0),
-                    width: double.infinity,
-                    height: 50,
-                    child: FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Text('Edit Address'),
-                      color: Colors.pinkAccent,
-                      textColor: Colors.white,
-                      onPressed: () {
-                        Navigator.pushNamed(context,
-                            'locator_page/${getStringFromEnum(LocationPageMode.HOME_LOCATION)}');
-                      },
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10,),color: Colors.white,),
+                    child: Column(
+                      children: <Widget>[
+                        Center(
+                            child: Container(
+                                margin: EdgeInsets.only(
+                                    top: 24.0, right: 15.0, left: 15.0, bottom: 10.0),
+                                child: Text(address != null
+                                    ? address
+                                    : "No Home Address Set"))),
+                        Container(
+                          margin: EdgeInsets.only(
+                              top: 10.0, right: 15.0, left: 15.0, bottom: 10.0),
+                          width: double.infinity,
+                          height: 40,
+                          child: FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            child: Text('Edit Address'),
+                            color: Colors.pinkAccent,
+                            textColor: Colors.white,
+                            onPressed: () {
+                              Navigator.pushNamed(context,
+                                  'locator_page/${getStringFromEnum(LocationPageMode.HOME_LOCATION)}');
+                            },
+                          ),
+                        ),
+                      ],
+
                     ),
                   ),
                   ListTile(
@@ -111,7 +119,7 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> {
                         child: Center(
                           child: Text(
                             "Settings",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.white, fontSize: 18,),
                           ),
                         ),
                       ),
@@ -127,7 +135,7 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> {
                       ),
                       child: SizedBox(
                         height: 50,
-                        child: Center(child: Text("Help", style: TextStyle(color: Colors.white),)),
+                        child: Center(child: Text("Help", style: TextStyle(color: Colors.white, fontSize: 18,),)),
                       ),
                     ),
                   ),
