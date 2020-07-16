@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         initialRoute: 'action_selection',
         onGenerateRoute: AppRouter.router.generator,
         theme: ThemeData(
-          fontFamily: 'Roboto',
+          fontFamily: 'Montserrat',
           primarySwatch: Colors.blue,
         ));
   }
