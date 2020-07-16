@@ -31,9 +31,9 @@ class ActionSelectionView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10)),
                 child: Text('Where are you going?',
                     style: TextStyle(
-                        fontSize: 28,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w700)),
+                        fontSize: 24,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w400)),
                 color: Colors.teal.shade400,
                 textColor: Colors.white,
                 elevation: 4,
@@ -60,9 +60,9 @@ class ActionSelectionView extends StatelessWidget {
                     Center(
                       child: Text('Home',
                           style: TextStyle(
-                              fontSize: 24,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w700)),
+                              fontSize: 20,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400)),
                     ),
                   ],
                 ),
@@ -98,10 +98,10 @@ class ActionSelectionView extends StatelessWidget {
                   children: [
                     Text('Somewhere Else',
                         style: TextStyle(
-                            fontSize: 24,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w700)),
-                    Icon(Icons.arrow_forward_ios),
+                            fontSize: 20,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w400)),
+                    Icon(Icons.chevron_right),
                   ],
                 ),
                 color: Colors.pinkAccent,

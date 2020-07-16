@@ -22,7 +22,7 @@ class RidePartyPage extends StatelessWidget {
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 32,
-                      fontFamily: 'Roboto',
+                      fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w700),
                 ),
               )),
@@ -35,7 +35,7 @@ class RidePartyPage extends StatelessWidget {
                 child: Text('Yes, Just Me',
                     style: TextStyle(
                         fontSize: 18,
-                        fontFamily: 'Roboto',
+                        fontFamily: 'Montserrat',
                         fontWeight: FontWeight.w700)),
                 color: Colors.cyan,
                 textColor: Colors.white,
@@ -53,7 +53,7 @@ class RidePartyPage extends StatelessWidget {
                 child: Text('No, I\u0027m with others',
                     style: TextStyle(
                         fontSize: 18,
-                        fontFamily: 'Roboto',
+                        fontFamily: 'Montserrat',
                         fontWeight: FontWeight.w700)),
                 color: Colors.deepPurple,
                 textColor: Colors.white,
