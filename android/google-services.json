@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "445095663620",
+    "firebase_url": "https://gmoh-flutter.firebaseio.com",
+    "project_id": "gmoh-flutter",
+    "storage_bucket": "gmoh-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445095663620:android:abb502060a21f47540bd51",
+        "android_client_info": {
+          "package_name": "com.example.gmoh_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "445095663620-9lb02hu761bsksmqnu922un0nkdkacvd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl8kPZG0nMtEznwYMRDNWwyecEnIkCeMU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "445095663620-9lb02hu761bsksmqnu922un0nkdkacvd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
