@@ -110,7 +110,7 @@ class ActionSelectionView extends StatelessWidget {
                 onPressed: () {
                   var newLocation =
                       getStringFromEnum(LocationPageMode.NEW_LOCATION);
-                  Navigator.pushNamed(context, 'locator_page/${newLocation}');
+                  Navigator.pushNamed(context, 'locator_page/$newLocation');
                 },
               ),
             ),

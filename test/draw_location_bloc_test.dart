@@ -1,10 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gmoh_app/io/models/location_model.dart';
 import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/drawer_bloc.dart';
-import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
 import 'package:mockito/mockito.dart';
-import 'dart:async';
 
 main() => {
   test('test repository should return saved home location',() async {

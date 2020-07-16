@@ -44,6 +44,7 @@ dependencies:
   fluro: "^1.5.1"
   dio: ^3.0.9
   hexcolor: ^1.0.4
+  firebase_remote_config: ^0.3.1
 
 
 
@@ -98,7 +99,6 @@ flutter:
           weight: 300
 
   assets:
-   - secrets.json
    - assets/images/background1300.png
    - assets/images/homeIcon.png
    - assets/images/profileImage.jpg

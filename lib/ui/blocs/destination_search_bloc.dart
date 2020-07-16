@@ -11,7 +11,9 @@ class DestinationSearchBloc {
   final PublishSubject<DestinationSearchResult> _subject =
       PublishSubject<DestinationSearchResult>();
 
-  get placeSuggestionObservable => _subject;
+  Stream<DestinationSearchResult> getPlaceSuggestionObservable(){
+    return _subject.stream;
+  }
 
   DestinationSearchBloc(this._searchRepository);
 

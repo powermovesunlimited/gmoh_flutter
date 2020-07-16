@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
 import 'package:gmoh_app/io/repository/trip_route_repo.dart';
 import 'package:gmoh_app/ui/blocs/trip_route_bloc.dart';
+import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 class TripConfirmationMap extends StatefulWidget {
   final double latitude;
@@ -27,19 +29,12 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
 
   TripConfirmationMapState(this._targetDestination);
 
-  @override
-  void initState() {
-    _tripRouteBloc = TripRouteBloc(TripRouteRepository(GoogleApiService()));
-    super.initState();
-  }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final remoteConfigHelper = Provider.of<RemoteConfigHelper>(context);
+    _tripRouteBloc = TripRouteBloc(TripRouteRepository(GoogleApiService(remoteConfigHelper)));
     return StreamBuilder(
       stream: _tripRouteBloc.tripRouteObservable.stream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {

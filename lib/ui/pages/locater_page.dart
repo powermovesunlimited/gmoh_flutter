@@ -7,7 +7,9 @@ import 'package:gmoh_app/ui/blocs/destination_search_bloc.dart';
 import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
 import 'package:gmoh_app/ui/models/locator_page_model.dart';
 import 'package:gmoh_app/util/permissions_helper.dart';
+import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:gmoh_app/util/titled_divider.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:gmoh_app/io/database/location_database.dart';
 
@@ -26,8 +28,8 @@ class _LocatorPageState extends State<LocatorPage>
   UserLocationsBloc _locationBloc;
 
 
-  DestinationSearchBloc _bloc =
-      DestinationSearchBloc(DestinationSearchRepository(GoogleApiService()));
+  DestinationSearchBloc _bloc;
+
 
   var hasRequestedLocationPermission = false;
   final onTextChangedListener = new PublishSubject<String>();
@@ -38,9 +40,7 @@ class _LocatorPageState extends State<LocatorPage>
 
   @override
   void initState() {
-    onTextChangedListener
-        .distinct()
-        .listen((searchText) {
+    onTextChangedListener.distinct().listen((searchText) {
       getLocationResults(searchText);
     });
     attemptToRetrieveUserPosition();
@@ -162,9 +162,7 @@ class _LocatorPageState extends State<LocatorPage>
   }
 
   void getLocationResults(String searchText) async {
-    setState(() {
-      _bloc.searchPlacesByQuery(searchText, userPosition);
-    });
+    _bloc.searchPlacesByQuery(searchText, userPosition);
   }
 
   Widget createSuggestionItemView(
@@ -215,8 +213,10 @@ class _LocatorPageState extends State<LocatorPage>
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: _bloc.placeSuggestionObservable.stream,
+    final remoteConfigHelper = Provider.of<RemoteConfigHelper>(context);
+    _bloc = DestinationSearchBloc(DestinationSearchRepository(GoogleApiService(remoteConfigHelper)));
+    return StreamBuilder<DestinationSearchResult>(
+        stream: _bloc.getPlaceSuggestionObservable(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           DestinationSearchResult result = snapshot.data;
           return buildContentView(result);
