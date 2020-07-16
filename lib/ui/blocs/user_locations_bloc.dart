@@ -7,7 +7,11 @@ class UserLocationsBloc implements BlocBase {
   final LocationRepository _repository;
   final PublishSubject<Location> _resultSubject =
       PublishSubject<Location>();
-  get locationDataObservable => _resultSubject;
+
+
+  Stream<Location> getLocationDataObservable() {
+    return _resultSubject.stream;
+  }
 
   UserLocationsBloc(this._repository);
 
@@ -24,12 +28,13 @@ class UserLocationsBloc implements BlocBase {
     }
   }
 
-  void setHomeLocation(double latitude, double longitude){
+  void setHomeLocation(String address, double latitude, double longitude){
     final homeLocation = Location(
-      null,
+        null,
+        address,
         latitude,
         longitude,
-      LocationType.HOME
+        LocationType.HOME
     );
     _repository.saveHomeLocation(homeLocation);
   }

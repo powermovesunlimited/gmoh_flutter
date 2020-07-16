@@ -23,7 +23,7 @@ class LocationDatabase {
   Future<Database> initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "main.db");
-    return await openDatabase(path, version: 1, onCreate: _onCreate);
+    return await openDatabase(path, version: 2, onCreate: _onCreate);
   }
 
   void _onCreate(Database db, int version) async {
@@ -45,20 +45,20 @@ class LocationDatabase {
 
     return res.isNotEmpty
         ? res
-            .map((entry) => Location(entry["id"], entry["longitude"],
+            .map((entry) => Location(entry["id"], entry["address"], entry["longitude"],
                 entry["latitude"], entry["type"]))
             .toList()
         : [];
   }
 
-  getLocationByType(String type) async {
+  Future<Location> getLocationByType(String type) async {
     final dbClient = await db;
-    var res =
+    var queryResponse =
         await dbClient.query('Locations', where: 'type = ?', whereArgs: [type]);
 
-    return res.isNotEmpty
-        ? Location(res.first["id"], res.first["longitude"],
-            res.first["latitude"], res.first["type"])
+    return queryResponse.isNotEmpty
+        ? Location(queryResponse.first["id"], queryResponse.first["address"], queryResponse.first["longitude"],
+            queryResponse.first["latitude"], queryResponse.first["type"])
         : null;
   }
 

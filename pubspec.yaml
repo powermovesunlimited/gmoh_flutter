@@ -43,6 +43,7 @@ dependencies:
   shared_preferences: '>=0.5.7+3 <2.0.0'
   fluro: "^1.5.1"
   dio: ^3.0.9
+  hexcolor: ^1.0.4
 
 
 
@@ -100,6 +101,7 @@ flutter:
    - secrets.json
    - assets/images/background1300.png
    - assets/images/homeIcon.png
+   - assets/images/profileImage.jpg
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
