@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:gmoh_app/io/models/trip_route_response.dart';
 import 'package:gmoh_app/io/models/place_details_response.dart';
 import 'package:gmoh_app/io/models/place_search_response.dart';
-import 'package:gmoh_app/util/secret_loader.dart';
+import 'package:gmoh_app/io/models/trip_route_response.dart';
+import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GoogleApiService {
@@ -13,13 +13,17 @@ class GoogleApiService {
   static const _PLACES_DETAILS_ENDPOINT = "maps/api/place/details/json";
   static const _DIRECTIONS_ENDPOINT = "maps/api/directions/json";
   final Dio _dioClient = Dio();
+  final RemoteConfigHelper remoteConfigHelper;
+
+
+  GoogleApiService(this.remoteConfigHelper);
 
   Future<PlaceSearchResponse> searchPlacesByQuery(searchText,
       [Position userPosition]) async {
-    final secret = await SecretLoader(secretPath: "secrets.json").load();
+    String apiKey = remoteConfigHelper.googleApiKey;
     try {
       Response response = await _dioClient.get(_buildPlaceSearchEndPoint(
-          searchText, secret.googleApiKey, userPosition));
+          searchText, apiKey, userPosition));
       final json = response.data;
       if (json != null) {
         return PlaceSearchResponse.fromJson(json);
@@ -34,10 +38,10 @@ class GoogleApiService {
   }
 
   Future<PlaceDetailsResponse> fetchPlaceDetails(placeId) async {
-    final secret = await SecretLoader(secretPath: "secrets.json").load();
+    String apiKey = remoteConfigHelper.googleApiKey;
     try {
       Response response = await _dioClient
-          .get(_buildPlaceDetailsEndPoint(placeId, secret.googleApiKey));
+          .get(_buildPlaceDetailsEndPoint(placeId, apiKey));
       final json = response.data;
       if (json != null) {
         return PlaceDetailsResponse.fromJson(json);
@@ -53,12 +57,12 @@ class GoogleApiService {
 
   Future<TripRouteResponse> fetchTripRoute(
       LatLng originLatLng, LatLng destinationLatLng) async {
-    final secret = await SecretLoader(secretPath: "secrets.json").load();
+    String apiKey = remoteConfigHelper.googleApiKey;
     try {
       final path = _buildDirectionsEndPoint(
           originLatLng.asStringCoordinates(),
           destinationLatLng.asStringCoordinates(),
-          secret.googleApiKey);
+          apiKey);
       Response response = await _dioClient.get(path);
       final json = response.data;
       if (json != null) {

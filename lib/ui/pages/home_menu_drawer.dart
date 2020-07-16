@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gmoh_app/io/database/location_database.dart';
-import 'package:gmoh_app/io/models/location_model.dart';
 import 'package:gmoh_app/io/repository/location_repo.dart';
-import 'package:gmoh_app/ui/blocs/destination_search_bloc.dart';
 import 'package:gmoh_app/ui/blocs/drawer_bloc.dart';
 import 'package:gmoh_app/ui/models/locator_page_model.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:rxdart/subjects.dart';
 
 class HomeMenuDrawer extends StatefulWidget {
   const HomeMenuDrawer({
@@ -18,9 +15,7 @@ class HomeMenuDrawer extends StatefulWidget {
 }
 
 class _HomeMenuDrawerState extends State<HomeMenuDrawer> {
-  TextEditingController _controller;
 
-  final onTextChangedListener = new PublishSubject<String>();
   DrawerBloc _drawerBloc;
 
   @override
@@ -28,13 +23,10 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> {
     super.initState();
     var locationDatabase = LocationDatabase();
     _drawerBloc = DrawerBloc(LocationRepository(locationDatabase));
-    _controller = new TextEditingController(text: '');
-    var txt = TextEditingController();
   }
 
   @override
   Widget build(BuildContext context) {
-    var txt = TextEditingController();
     return StreamBuilder<String>(
         stream: _drawerBloc.getAddressAsObservable(),
         builder: (context, snapshot) {

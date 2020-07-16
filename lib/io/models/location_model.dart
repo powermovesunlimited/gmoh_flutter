@@ -21,3 +21,12 @@ class Location{
 enum LocationType {
   HOME,
 }
+
+LocationType getLocationTypeFromString(String type) {
+  return LocationType.values
+      .firstWhere((mode) => _getTypeStringFromEnum(mode) == type);
+}
+
+String _getTypeStringFromEnum(LocationType type){
+  return type.toString().substring(type.toString().indexOf('.')+1);
+}
