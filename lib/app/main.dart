@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gmoh_app/config/app_router.dart';
+import 'package:gmoh_app/util/remote_config_helper.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   AppRouter.setupRouter();

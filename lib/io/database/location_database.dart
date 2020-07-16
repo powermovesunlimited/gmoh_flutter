@@ -58,7 +58,7 @@ class LocationDatabase {
 
     return queryResponse.isNotEmpty
         ? Location(queryResponse.first["id"], queryResponse.first["address"], queryResponse.first["longitude"],
-            queryResponse.first["latitude"], queryResponse.first["type"])
+            queryResponse.first["latitude"], getLocationTypeFromString(queryResponse.first["type"]))
         : null;
   }
 
