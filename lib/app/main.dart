@@ -12,13 +12,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+        providers: [
+        FutureProvider(create: (_) => RemoteConfigHelper.getInstance()),
+    ],child:MaterialApp(
         title: 'Flutter Demo',
         initialRoute: 'action_selection',
         onGenerateRoute: AppRouter.router.generator,
         theme: ThemeData(
           fontFamily: 'Montserrat',
           primarySwatch: Colors.blue,
-        ));
+        )),
+    );
   }
 }
