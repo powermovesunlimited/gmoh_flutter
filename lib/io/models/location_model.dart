@@ -11,6 +11,7 @@ class Location{
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
     map['id'] = id;
+    map['address'] = address;
     map['longitude'] = longitude;
     map['latitude'] = latitude;
     map['type'] = describeEnum(type);

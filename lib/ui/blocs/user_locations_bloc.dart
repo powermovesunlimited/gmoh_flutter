@@ -28,14 +28,19 @@ class UserLocationsBloc implements BlocBase {
     }
   }
 
-  void setHomeLocation(String address, double latitude, double longitude){
+  Future<void> setHomeLocation(String address, double latitude, double longitude) async {
     final homeLocation = Location(
-        null,
+        0,
         address,
         latitude,
         longitude,
         LocationType.HOME
     );
-    _repository.saveHomeLocation(homeLocation);
+    var currentLocation = await _repository.getHomeLocation();
+    if(currentLocation == null) {
+      _repository.saveHomeLocation(homeLocation);
+    }else{
+      _repository.updateHomeLocation(homeLocation);
+    }
   }
 }
