@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmoh_app/io/models/home_location_result.dart';
 import 'package:gmoh_app/ui/models/locator_page_model.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class ActionSelectionView extends StatelessWidget {
   final HomeLocationResult homeLocationResult;
@@ -22,22 +23,17 @@ class ActionSelectionView extends StatelessWidget {
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(top: 72.0, right: 24.0, left: 24.0),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Hexcolor("#078B91"),),
             child: SizedBox(
               width: double.infinity,
               height: 120,
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+              child: Center(
                 child: Text('Where are you going?',
-                    style: TextStyle(
+                    style: TextStyle(color: Colors.white,
                         fontSize: 24,
                         fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w400)),
-                color: Colors.teal.shade400,
-                textColor: Colors.white,
-                elevation: 4,
-                onPressed: () {},
+                        fontWeight: FontWeight.w400),
+                ),
               ),
             ),
           ),
