@@ -14,8 +14,8 @@ class HomeMenuDrawer extends StatefulWidget {
   _HomeMenuDrawerState createState() => _HomeMenuDrawerState();
 }
 
-class _HomeMenuDrawerState extends State<HomeMenuDrawer> with WidgetsBindingObserver {
-
+class _HomeMenuDrawerState extends State<HomeMenuDrawer>
+    with WidgetsBindingObserver {
   DrawerBloc _drawerBloc;
 
   @override
@@ -35,7 +35,7 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> with WidgetsBindingObse
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if(state == AppLifecycleState.resumed){
+    if (state == AppLifecycleState.resumed) {
       _drawerBloc.getHomeLocation();
     }
   }
@@ -58,8 +58,8 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> with WidgetsBindingObse
                         width: 90.0,
                         height: 90.0,
                         decoration: BoxDecoration(
-                          border: Border.all(width: 3,
-                            color: Colors.pinkAccent),
+                          border:
+                              Border.all(width: 3, color: Colors.pinkAccent),
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             fit: BoxFit.fill,
@@ -72,9 +72,10 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> with WidgetsBindingObse
                         child: Text(
                           "Im a Rida",
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400),
                         ),
                       ),
                     ],
@@ -82,16 +83,32 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> with WidgetsBindingObse
                   Container(
                     margin: EdgeInsets.only(
                         top: 10.0, right: 15.0, left: 15.0, bottom: 10.0),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10,),color: Colors.white,),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        10,
+                      ),
+                      color: Colors.white,
+                    ),
                     child: Column(
                       children: <Widget>[
                         Center(
                             child: Container(
                                 margin: EdgeInsets.only(
-                                    top: 24.0, right: 15.0, left: 15.0, bottom: 10.0),
-                                child: Text(address != null
-                                    ? address
-                                    : "No Home Address Set"))),
+                                    top: 24.0,
+                                    right: 15.0,
+                                    left: 15.0,
+                                    bottom: 10.0),
+                                child: Text(
+                                  address != null
+                                      ? address
+                                      : "No Home Address Set",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w400),
+                                  textAlign: TextAlign.center,
+                                ))),
                         Container(
                           margin: EdgeInsets.only(
                               top: 10.0, right: 15.0, left: 15.0, bottom: 10.0),
@@ -100,7 +117,14 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> with WidgetsBindingObse
                           child: FlatButton(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
-                            child: Text('Edit Address'),
+                            child: Text(
+                              'Edit Address',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w400),
+                            ),
                             color: Colors.pinkAccent,
                             textColor: Colors.white,
                             onPressed: () {
@@ -110,7 +134,6 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> with WidgetsBindingObse
                           ),
                         ),
                       ],
-
                     ),
                   ),
                   ListTile(
@@ -126,7 +149,11 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> with WidgetsBindingObse
                         child: Center(
                           child: Text(
                             "Settings",
-                            style: TextStyle(color: Colors.white, fontSize: 18,),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w400),
                           ),
                         ),
                       ),
@@ -142,7 +169,17 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> with WidgetsBindingObse
                       ),
                       child: SizedBox(
                         height: 50,
-                        child: Center(child: Text("Help", style: TextStyle(color: Colors.white, fontSize: 18,),)),
+                        child: Center(
+                          child: Text(
+                            "Help",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
