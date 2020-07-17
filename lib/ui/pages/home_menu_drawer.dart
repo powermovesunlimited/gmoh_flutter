@@ -14,7 +14,7 @@ class HomeMenuDrawer extends StatefulWidget {
   _HomeMenuDrawerState createState() => _HomeMenuDrawerState();
 }
 
-class _HomeMenuDrawerState extends State<HomeMenuDrawer> {
+class _HomeMenuDrawerState extends State<HomeMenuDrawer> with WidgetsBindingObserver {
 
   DrawerBloc _drawerBloc;
 
@@ -23,6 +23,21 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> {
     super.initState();
     var locationDatabase = LocationDatabase();
     _drawerBloc = DrawerBloc(LocationRepository(locationDatabase));
+    _drawerBloc.getHomeLocation();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.resumed){
+      _drawerBloc.getHomeLocation();
+    }
   }
 
   @override

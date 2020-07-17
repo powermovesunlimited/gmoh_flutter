@@ -23,12 +23,12 @@ class LocationDatabase {
   Future<Database> initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "main.db");
-    return await openDatabase(path, version: 2, onCreate: _onCreate);
+    return await openDatabase(path, version: 3, onCreate: _onCreate);
   }
 
   void _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE Locations(id STRING PRIMARY KEY, type STRING, longitude DOUBLE, latitude DOUBLE)");
+        "CREATE TABLE Locations(id STRING PRIMARY KEY, type STRING, longitude DOUBLE, latitude DOUBLE, address STRING)");
     print("Database was Created!");
   }
 

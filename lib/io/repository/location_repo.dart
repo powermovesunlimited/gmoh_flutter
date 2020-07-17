@@ -14,6 +14,10 @@ class LocationRepository {
     _database.addLocation(location);
   }
 
+  updateHomeLocation(Location location) async {
+    _database.updateLocation(location);
+  }
+
   void dispose(){
     _database.closeDb();
   }
