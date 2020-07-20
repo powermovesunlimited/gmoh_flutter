@@ -27,12 +27,18 @@ class ActionSelectionView extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               height: 120,
-              child: Center(
-                child: Text('Where are you going?',
-                    style: TextStyle(color: Colors.white,
-                        fontSize: 24,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w400),
+              child: Container(
+                padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: SizedBox(
+                    child: Text('Where are you going?',
+                        style: TextStyle(color: Colors.white,
+                            fontSize: 24,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w400),
+                    ),
+                  ),
                 ),
               ),
             ),
