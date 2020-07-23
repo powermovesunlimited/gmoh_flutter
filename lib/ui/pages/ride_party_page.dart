@@ -31,15 +31,12 @@ class RidePartyPage extends StatelessWidget {
                 height: 120,
                 child: Container(
                   padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: SizedBox(
-                      child: Text('How many people are riding?',
-                        style: TextStyle(color: Colors.white,
-                            fontSize: 24,
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w400),
-                      ),
+                  child: Center(
+                    child: Text('How many people are riding?',
+                      style: TextStyle(color: Colors.white,
+                          fontSize: 18,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w400),
                     ),
                   ),
                 ),
@@ -123,7 +120,7 @@ class RidePartyPage extends StatelessWidget {
                             textColor: Colors.white,
                             elevation: 4,
                             onPressed: () {
-                              //todo
+                              Navigator.pop(context);
                             },
                           ),
                         ),
