@@ -104,42 +104,30 @@ class RidePartyPage extends StatelessWidget {
                   alignment: FractionalOffset.center,
                   margin: EdgeInsets.only(top: 20.0, right: 24.0, left: 24.0),
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(top: 0.0, right: 0.0, left: 10.0),
-                          child: SizedBox(
-                            height: 50,
-                            child: RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('Find my ride',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: FontWeight.w400)),
-                                  Icon(Icons.chevron_right),
-                                ],
-                              ),
-                              color: Colors.pinkAccent,
-                              textColor: Colors.white,
-                              elevation: 4,
-                              onPressed: () {
-                                //todo
-                              },
-                            ),
-                          ),
-                        ),
+                  child: SizedBox(
+                    height: 50,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Find my ride',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w400)),
+                          Icon(Icons.chevron_right),
+                        ],
                       ),
-
-                    ],
+                      color: Colors.pinkAccent,
+                      textColor: Colors.white,
+                      elevation: 4,
+                      onPressed: () {
+                        //todo
+                      },
+                    ),
                   ),
                 ),
               ],
