@@ -45,10 +45,10 @@ android {
     }
     signingConfigs {
         release {
-            keyAlias System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
-            keyPassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
-            storeFile file(System.getenv("HOME") + "/keystores/pmd_key.jks")
-            storePassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
+            keyAlias 'pmdkey'
+            keyPassword 'gr!ndH0use'
+            storeFile file('/Users/pmddev/StudioProjects/keys/pmd_key/pmd_key.jks')
+            storePassword 'gr!ndH0use'
         }
     }
 
@@ -57,6 +57,7 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
+            debuggable true
         }
 
         debug {
