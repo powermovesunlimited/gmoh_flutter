@@ -107,24 +107,7 @@ class RidePartyPage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 0.0, right: 10.0, left: 0.0),
-                        width:56,
-                        child: SizedBox(
-                          height: 50,
-                          child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Icon(Icons.chevron_left),
-                            color: Colors.pinkAccent,
-                            textColor: Colors.white,
-                            elevation: 4,
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ),
-                      ),
+
                       Expanded(
                         child: Container(
                           margin: EdgeInsets.only(top: 0.0, right: 0.0, left: 10.0),
