@@ -4,8 +4,10 @@ import 'package:gmoh_app/ui/pages/locator/locator_page.dart';
 class AlternateLocationPage extends LocatorPage {
   static const String routeName = "/altLocationPage";
 
+  AlternateLocationPage();
+
   @override
-  LocatorPageState createState() => LocatorPageState();
+  LocatorPageState createState() => AlternateLocationState();
 }
 
 class AlternateLocationState extends LocatorPageState {

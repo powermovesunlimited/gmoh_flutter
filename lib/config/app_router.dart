@@ -1,6 +1,5 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:gmoh_app/ui/models/locator_page_model.dart';
 import 'package:gmoh_app/ui/pages/action_selection_page.dart';
 import 'package:gmoh_app/ui/pages/locator/alt_location_page.dart';
 import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
