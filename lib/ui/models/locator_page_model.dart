@@ -1,10 +1,10 @@
-enum LocationPageMode { HOME_LOCATION, NEW_LOCATION, ORIGIN }
+enum HomeLocationPageMode { HOME_LOCATION, NEW_LOCATION, ORIGIN }
 
-LocationPageMode getPageModeFromString(String pageMode) {
-  return LocationPageMode.values
+HomeLocationPageMode getPageModeFromString(String pageMode) {
+  return HomeLocationPageMode.values
       .firstWhere((mode) => getStringFromEnum(mode) == pageMode);
 }
 
-String getStringFromEnum(LocationPageMode pageEnum){
+String getStringFromEnum(HomeLocationPageMode pageEnum){
   return pageEnum.toString().substring(pageEnum.toString().indexOf('.')+1);
 }
