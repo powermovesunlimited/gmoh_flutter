@@ -129,7 +129,7 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer>
                             textColor: Colors.white,
                             onPressed: () {
                               Navigator.pushNamed(context,
-                                  'locator_page/${getStringFromEnum(LocationPageMode.HOME_LOCATION)}');
+                                  'home_locator_page/${getStringFromEnum(HomeLocationPageMode.HOME_LOCATION)}');
                             },
                           ),
                         ),

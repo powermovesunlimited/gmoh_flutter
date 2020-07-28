@@ -1,8 +1,8 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:gmoh_app/ui/models/locator_page_model.dart';
 import 'package:gmoh_app/ui/pages/action_selection_page.dart';
-import 'package:gmoh_app/ui/pages/locater_page.dart';
+import 'package:gmoh_app/ui/pages/locator/alt_location_page.dart';
+import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
 import 'package:gmoh_app/ui/pages/ride_party_page.dart';
 import 'package:gmoh_app/ui/pages/trip_confirmation_map.dart';
 
@@ -16,10 +16,14 @@ class AppRouter {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           RidePartyPage());
 
-  static Handler _locatorPageHandler =
+  static Handler _alternateLocationPageHandler =
       Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
-    final pageValue = params['mode'][0];
-    return LocatorPage(getPageModeFromString(pageValue));
+    return AlternateLocationPage();
+  });
+
+  static Handler _homeLocatorPageHandler =
+      Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return HomeLocatorPage();
   });
 
   static Handler _mapPageHandler =
@@ -32,7 +36,8 @@ class AppRouter {
   static void setupRouter() {
     router.define('action_selection', handler: _actionSelectionHandler);
     router.define('ride_party_page', handler: _ridePartyPageHandler);
-    router.define('locator_page/:mode', handler: _locatorPageHandler);
+    router.define('alt_location_page', handler: _alternateLocationPageHandler);
+    router.define('home_locator_page', handler: _homeLocatorPageHandler);
     router.define('map/:latlng', handler: _mapPageHandler);
   }
 }
