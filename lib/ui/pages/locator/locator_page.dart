@@ -6,10 +6,9 @@ import 'package:gmoh_app/io/repository/destinations_search_repo.dart';
 import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/destination_search_bloc.dart';
 import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
+import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/permissions_helper.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
-import 'package:gmoh_app/util/titled_divider.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -103,7 +102,7 @@ class LocatorPageState extends State<LocatorPage>
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     gradient: LinearGradient(
-                        colors: [Hexcolor("#078B91"), Hexcolor("#336D6B")]),
+                        colors: [HexColor("#078B91"), HexColor("#336D6B")]),
                   ),
                   child: SizedBox(
                     width: double.infinity,

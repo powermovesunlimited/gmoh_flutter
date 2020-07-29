@@ -3,7 +3,7 @@ import 'package:gmoh_app/io/database/location_database.dart';
 import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/drawer_bloc.dart';
 import 'package:gmoh_app/ui/models/locator_page_model.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'package:gmoh_app/util/hex_color.dart';
 
 class HomeMenuDrawer extends StatefulWidget {
   const HomeMenuDrawer({
@@ -48,7 +48,7 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer>
           var address = snapshot.data;
           return Drawer(
             child: Container(
-              color: Hexcolor("#2B2C2C"),
+              color: HexColor("#2B2C2C"),
               child: ListView(
                 children: <Widget>[
                   DrawerHeader(

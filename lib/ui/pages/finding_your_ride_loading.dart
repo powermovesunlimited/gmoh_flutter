@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gmoh_app/ui/pages/ride_party_dialog.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'package:gmoh_app/util/hex_color.dart';
 
 class FindYourRideLoadingPage extends StatelessWidget {
   @override
@@ -27,7 +26,7 @@ class FindYourRideLoadingPage extends StatelessWidget {
           children: <Widget>[
             Container(
               margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Hexcolor("#de5d54"),),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: HexColor("#de5d54"),),
               child: Column(
                 children: [
                   Container(
@@ -47,7 +46,7 @@ class FindYourRideLoadingPage extends StatelessWidget {
                               Container(
                                 margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
                                 child: SizedBox(
-                                  height: 2, width: 160, child: Container(child: LinearProgressIndicator(backgroundColor: Hexcolor("#de5d54"), valueColor: AlwaysStoppedAnimation(Colors.white) , ))
+                                  height: 2, width: 160, child: Container(child: LinearProgressIndicator(backgroundColor: HexColor("#de5d54"), valueColor: AlwaysStoppedAnimation(Colors.white) , ))
                                   ,
                                 ),
                               )
