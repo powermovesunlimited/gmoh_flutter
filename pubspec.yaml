@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.0
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -20,7 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
   cloud_firestore: ^0.13.0+1
-  firebase_auth: ^0.14.0+5
+  firebase_auth: ^0.16.1
   firebase_database: ^3.0.7
   geolocator: ^5.1.5
   path: ^1.6.4
@@ -36,10 +36,9 @@ dependencies:
   geocoder: ^0.2.1
   flutter_google_places: ^0.2.3
   flutter_spinkit: ^4.0.0
-  geoflutterfire: ^2.1.0
   flutter_polyline_points: ^0.1.0
   get_it: ^3.0.0+1
-  permission_handler: ^3.1.0
+  permission_handler: ^5.0.1+1
   shared_preferences: '>=0.5.7+3 <2.0.0'
   fluro: "^1.5.1"
   dio: ^3.0.9

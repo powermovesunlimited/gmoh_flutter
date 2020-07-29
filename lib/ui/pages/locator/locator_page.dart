@@ -63,7 +63,7 @@ class LocatorPageState extends State<LocatorPage>
       return;
     } else if (locationPermissionGranted) {
       Position position = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
       setState(() {
         userPosition = position;
       });
@@ -71,7 +71,8 @@ class LocatorPageState extends State<LocatorPage>
   }
 
   void requestLocationPermission() async {
-    if (await permissionsHelper.requestLocationPermission()) {
+    await permissionsHelper.requestLocationPermission();
+    if (await permissionsHelper.isLocationPermissionGranted()) {
       setState(() {
         hasRequestedLocationPermission = true;
       });

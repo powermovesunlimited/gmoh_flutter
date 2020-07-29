@@ -1,4 +1,4 @@
-package com.example.gmoh_app;
+package com.pmd.gmohapp;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
