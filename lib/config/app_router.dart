@@ -2,6 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gmoh_app/ui/pages/action_selection_page.dart';
 import 'package:gmoh_app/ui/pages/locator/alt_location_page.dart';
+import 'package:gmoh_app/ui/pages/locator/current_user_location.dart';
 import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
 import 'package:gmoh_app/ui/pages/ride_party_page.dart';
 import 'package:gmoh_app/ui/pages/trip_confirmation_map.dart';
@@ -18,12 +19,14 @@ class AppRouter {
 
   static Handler _alternateLocationPageHandler =
       Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
-    return AlternateLocationPage();
+        var position = (params['position']);
+        return AlternateLocationPage(position);
   });
 
   static Handler _homeLocatorPageHandler =
       Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
-    return HomeLocatorPage();
+        var position = (params['position']);
+        return HomeLocatorPage(position);
   });
 
   static Handler _mapPageHandler =
@@ -33,11 +36,18 @@ class AppRouter {
     return TripConfirmationMap(double.parse(latitude), double.parse(longitude));
   });
 
+  static Handler _currentUserLocationPageHandler =
+  Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    var position = (params['position']);
+    return CurrentUserLocationPage(position);
+  });
+
   static void setupRouter() {
     router.define('action_selection', handler: _actionSelectionHandler);
     router.define('ride_party_page', handler: _ridePartyPageHandler);
-    router.define('alt_location_page', handler: _alternateLocationPageHandler);
-    router.define('home_locator_page', handler: _homeLocatorPageHandler);
+    router.define('alt_location_page/:userPosition', handler: _alternateLocationPageHandler);
+    router.define('home_locator_page/:userPosition', handler: _homeLocatorPageHandler);
     router.define('map/:latlng', handler: _mapPageHandler);
+    router.define('current_user_location', handler: _currentUserLocationPageHandler);
   }
 }

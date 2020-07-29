@@ -1,84 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
-import 'package:gmoh_app/io/database/location_database.dart';
 import 'package:gmoh_app/io/repository/destinations_search_repo.dart';
-import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/destination_search_bloc.dart';
-import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
 import 'package:gmoh_app/util/hex_color.dart';
-import 'package:gmoh_app/util/permissions_helper.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/subjects.dart';
 
 abstract class LocatorPage extends StatefulWidget {
-  LocatorPage();
+
+  LocatorPage(userPosition);
 
   LocatorPageState createState();
 }
 
-class LocatorPageState extends State<LocatorPage>
-    implements PermissionDialogListener {
-  LocatorPageState();
+class LocatorPageState extends State<LocatorPage> {
 
-  UserLocationsBloc _locationBloc;
+  Position userPosition;
+
+  LocatorPageState(this.userPosition);
 
   DestinationSearchBloc _bloc;
 
-  var hasRequestedLocationPermission = false;
+  var _addressEntered = Set();
+
   final onTextChangedListener = new PublishSubject<String>();
-  final permissionsHelper = new PermissionsHelper();
-  Position userPosition;
+
+  var _textController = new TextEditingController();
 
   @override
   void initState() {
     onTextChangedListener.distinct().listen((searchText) {
       getLocationResults(searchText);
     });
-    attemptToRetrieveUserPosition();
     super.initState();
-    var locationDatabase = LocationDatabase();
-    _locationBloc = UserLocationsBloc(LocationRepository(locationDatabase));
-  }
-
-  @override
-  void onPermissionDenied() {
-    hasRequestedLocationPermission = true;
-  }
-
-  @override
-  void onRequestPermission() {
-    setState(() {
-      permissionsHelper.requestLocationPermission();
-      hasRequestedLocationPermission = true;
-    });
-  }
-
-  void attemptToRetrieveUserPosition() async {
-    var locationPermissionGranted =
-        await permissionsHelper.isLocationPermissionGranted();
-    if (!locationPermissionGranted && !hasRequestedLocationPermission) {
-      requestLocationPermission();
-      return;
-    } else if (locationPermissionGranted) {
-      Position position = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-      setState(() {
-        userPosition = position;
-      });
-    }
-  }
-
-  void requestLocationPermission() async {
-    await permissionsHelper.requestLocationPermission();
-    if (await permissionsHelper.isLocationPermissionGranted()) {
-      setState(() {
-        hasRequestedLocationPermission = true;
-      });
-    } else {
-      permissionsHelper.onLocationPermissionDenied(context, this);
-    }
   }
 
   Widget buildContentView(DestinationSearchResult searchResult) {
@@ -107,13 +63,14 @@ class LocatorPageState extends State<LocatorPage>
                   ),
                   child: SizedBox(
                     width: double.infinity,
-                    height: 88,
+                    height: 96,
                     child: Center(
                       child: Text(
                         getAppBarTitle(),
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 24,
+                            fontSize: 22,
                             fontFamily: 'Montserrat',
                             fontWeight: FontWeight.w400),
                       ),
@@ -131,23 +88,42 @@ class LocatorPageState extends State<LocatorPage>
                       top: 212.0, right: 24.0, left: 24.0),
                   color: Colors.white,
                   elevation: 10,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      hintText: getHintText(),
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
+                  child: Container(
+                    transform: Matrix4.translationValues(-18.0, 0.0, 0.0),
+                    child: TextField(
+                      controller: _textController,
+                      textAlign: TextAlign.start,
+                      textAlignVertical: TextAlignVertical.center,
+                      textDirection: TextDirection.ltr,
+                      decoration: InputDecoration(
+                        prefixIcon: Container(
+                          transform: Matrix4.translationValues(10.0, 0.0, 0.0),
+                          child: Icon(
+                            Icons.search,
+                            size: 24,
+                            color: HexColor("#078B91"),
+                          ),
+                        ),
+                        hintText: getHintText(),
+                        fillColor: Colors.white,
+                        border: InputBorder.none,
+                      ),
+                      style: TextStyle(
+                        fontSize: 13.0,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w400,
+                      ),
+                      onChanged: (searchText) {
+                        onTextChangedListener.add(searchText);
+                      },
                     ),
-                    onChanged: (searchText) {
-                      onTextChangedListener.add(searchText);
-                    },
                   ),
                 ),
               ),
               Container(
-                  child: searchResult != null
-                      ? setUpButtonWithResults(searchResult)
-                      : setUpButtonWithNoResults()),
+                  child: searchResult == null
+                      ? setUpButtonWithNoResults()
+                      : setUpButtonWithResults(searchResult)),
             ],
           ),
         ),
@@ -165,26 +141,27 @@ class LocatorPageState extends State<LocatorPage>
         height: 40,
         child: RaisedButton(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(getContinueButtonText(),
                   style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w400)),
-              Icon(Icons.chevron_right),
+              Icon(
+                Icons.chevron_right,
+                size: 20,
+              ),
             ],
           ),
           color: Colors.pinkAccent,
           textColor: Colors.white,
           elevation: 4,
           onPressed: () {
-            // this is where you handle the capturing of the address
-            //use address in the next page
-            // if home was click save address then move on to next page
+            navigateToNextPage();
           },
         ),
       ),
@@ -199,17 +176,20 @@ class LocatorPageState extends State<LocatorPage>
         height: 40,
         child: RaisedButton(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text( getContinueButtonText(),
+              Text(getContinueButtonText(),
                   style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w400)),
-              Icon(Icons.chevron_right),
+              Icon(
+                Icons.chevron_right,
+                size: 20,
+              ),
             ],
           ),
           color: Colors.pinkAccent,
@@ -241,26 +221,26 @@ class LocatorPageState extends State<LocatorPage>
           child: Container(
             child: ListView.builder(
               itemCount: searchResult.results.length,
-              itemBuilder: (BuildContext context, int index) => GestureDetector(
-                child: createSuggestionItemView(context, index, searchResult),
-                onTap: () async {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
+              itemBuilder: (BuildContext context, int index) =>
+                  GestureDetector(
+                    child: createSuggestionItemView(
+                        context, index, searchResult),
+                    onTap: () async {
+                      final placeDetails = await _bloc
+                          .getPlaceDetails(searchResult.results[index].placeId);
+                      final latitude = placeDetails.geometry.location.lat;
+                      final longitude = placeDetails.geometry.location.lng;
+                      final address = placeDetails.formattedAddress;
+                      _addressEntered.add(address);
+                      _addressEntered.add(latitude);
+                      _addressEntered.add(longitude);
+                      FocusScope.of(context).unfocus();
+                      setState(() {
+                        _textController.text = placeDetails.formattedAddress;
+                        searchResult.results.clear();
                       });
-
-                  final placeDetails = await _bloc
-                      .getPlaceDetails(searchResult.results[index].placeId);
-                  final latitude = placeDetails.geometry.location.lat;
-                  final longitude = placeDetails.geometry.location.lng;
-                  final address = placeDetails.formattedAddress;
-                  _locationBloc.setHomeLocation(address, latitude, longitude);
-                  Navigator.pushNamed(context, 'map/$latitude,$longitude');
-                },
-              ),
+                    },
+                  ),
             ),
           ),
         ),
@@ -268,8 +248,8 @@ class LocatorPageState extends State<LocatorPage>
     );
   }
 
-  Widget createSuggestionItemView(
-      BuildContext context, int index, DestinationSearchResult searchResult) {
+  Widget createSuggestionItemView(BuildContext context, int index,
+      DestinationSearchResult searchResult) {
     var placeSuggestion = searchResult.results[index];
     return Container(
       child: Padding(
@@ -283,7 +263,10 @@ class LocatorPageState extends State<LocatorPage>
                   Text(
                       placeSuggestion.streetAddress +
                           ", ${placeSuggestion.location}",
-                      style: TextStyle(fontSize: 12.0))
+                      style: TextStyle(
+                          fontSize: 12.0,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w400))
                 ],
               ),
             ],
@@ -317,4 +300,13 @@ class LocatorPageState extends State<LocatorPage>
           return buildContentView(result);
         });
   }
+
+  void navigateToNextPage() {
+    // placeholder function for navigation to next page
+  }
+
+  Set useEnteredAddress() {
+    return _addressEntered;
+  }
+
 }
