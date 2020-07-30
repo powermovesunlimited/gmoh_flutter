@@ -7,28 +7,13 @@ abstract class PermissionDialogListener {
 }
 
 class PermissionsHelper {
-  final PermissionHandler _permissionHandler = PermissionHandler();
 
-  Future<bool> requestLocationPermission() async {
-    return _requestPermission(PermissionGroup.locationWhenInUse);
+  requestLocationPermission() {
+    return Permission.location.request();
   }
 
-  Future<bool> _requestPermission(PermissionGroup permission) async {
-    var result = await _permissionHandler.requestPermissions([permission]);
-    if (result[permission] == PermissionStatus.granted) {
-      return true;
-    }
-    return false;
-  }
-
-  Future<bool> isLocationPermissionGranted() async {
-    return hasPermission(PermissionGroup.locationWhenInUse);
-  }
-
-  Future<bool> hasPermission(PermissionGroup permission) async {
-    var permissionStatus =
-        await _permissionHandler.checkPermissionStatus(permission);
-    return permissionStatus == PermissionStatus.granted;
+  Future<bool> isLocationPermissionGranted() {
+    return Permission.location.isGranted;
   }
 
   void onLocationPermissionDenied(
