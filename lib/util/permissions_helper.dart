@@ -7,28 +7,13 @@ abstract class PermissionDialogListener {
 }
 
 class PermissionsHelper {
-  final PermissionHandler _permissionHandler = PermissionHandler();
 
-  Future<bool> requestLocationPermission() async {
-    return _requestPermission(PermissionGroup.locationWhenInUse);
+  requestLocationPermission() {
+    return Permission.location.request();
   }
 
-  Future<bool> _requestPermission(PermissionGroup permission) async {
-    var result = await _permissionHandler.requestPermissions([permission]);
-    if (result[permission] == PermissionStatus.granted) {
-      return true;
-    }
-    return false;
-  }
-
-  Future<bool> isLocationPermissionGranted() async {
-    return hasPermission(PermissionGroup.locationWhenInUse);
-  }
-
-  Future<bool> hasPermission(PermissionGroup permission) async {
-    var permissionStatus =
-        await _permissionHandler.checkPermissionStatus(permission);
-    return permissionStatus == PermissionStatus.granted;
+  Future<bool> isLocationPermissionGranted() {
+    return Permission.location.isGranted;
   }
 
   void onLocationPermissionDenied(
@@ -38,7 +23,7 @@ class PermissionsHelper {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Are you sure?'),
+            title: Text('Location Needed'),
             content: const Text(
                 'Location Permission is needed to determine where to pick you up. Do you want to enable it?'),
             actions: <Widget>[
@@ -46,14 +31,13 @@ class PermissionsHelper {
                 child: Text('NO'),
                 onPressed: () {
                   listener.onPermissionDenied();
-                  Navigator.pop(context);
+                  Navigator.popAndPushNamed(context, 'current_user_location');
                 },
               ),
               FlatButton(
                 child: Text('YES'),
                 onPressed: () {
                   listener.onRequestPermission();
-                  Navigator.pop(context);
                 },
               )
             ],

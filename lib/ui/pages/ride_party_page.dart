@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gmoh_app/ui/pages/ride_party_dialog.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'package:gmoh_app/util/hex_color.dart';
 
 class RidePartyPage extends StatelessWidget {
   @override
@@ -25,7 +24,7 @@ class RidePartyPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(margin: EdgeInsets.only(top: 0.0, right: 24.0, left: 24.0),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Hexcolor("#078B91"),),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: HexColor("#078B91"),),
               child: SizedBox(
                 width: double.infinity,
                 height: 120,
