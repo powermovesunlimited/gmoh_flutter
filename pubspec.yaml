@@ -147,6 +147,8 @@ flutter:
   assets:
    - assets/images/background1300.png
    - assets/images/homeIcon.png
+   - assets/images/lyftIcon.png
+   - assets/images/uberIcon.png
    - assets/images/profileImage.jpg
 
   # For details regarding fonts from package dependencies,

@@ -4,6 +4,7 @@ import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/drawer_bloc.dart';
 import 'package:gmoh_app/ui/models/locator_page_model.dart';
 import 'package:gmoh_app/util/hex_color.dart';
+import 'package:gmoh_app/ui/pages/select_your_rideshare_page.dart';
 
 class HomeMenuDrawer extends StatefulWidget {
   const HomeMenuDrawer({
@@ -180,6 +181,33 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer>
                             ),
                           ),
                         ),
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    title: Container(
+                      margin: EdgeInsets.only(
+                          top: 10.0, right: 0.0, left: 0.0, bottom: 10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.pinkAccent,
+                      ),
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Text(
+                          'RIDE SHARE',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400),
+                        ),
+                        color: Colors.pinkAccent,
+                        textColor: Colors.white,
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SelectRideSharePage(32.741082, -117.058764)));
+                        },
                       ),
                     ),
                   ),
