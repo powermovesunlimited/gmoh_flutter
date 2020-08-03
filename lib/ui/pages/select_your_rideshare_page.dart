@@ -33,8 +33,6 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
   TripRouteBloc _tripRouteBloc;
   Polyline _polyline;
   static const LatLng _DEFAULT_POSITION = LatLng(39.50, -98.35);
-  int selected = -1;
-  int i;
 
   SelectRideSharePageState(this._targetDestination);
 
@@ -115,7 +113,6 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
             fit: BoxFit.fill),
       ),
       child: Column(
-        key: Key('builder ${selected.toString()}'),
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -169,36 +166,7 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
                             Text(rides[index].rideShareCost,style: TextStyle(color: Colors.white),)
                           ],
                         ),
-                        children: [
-                          SizedBox(
-                            height: 50,
-                            width: double.infinity,
-                            child: FlatButton(child: Text("Confirm Ride",
-                              style: TextStyle(color: Colors.white
-                              ),
-                            ),
-                                highlightColor: Colors.transparent,
-                                color: Colors.transparent,
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => ActionSelectionPage()),
-                                  );
-                                }
-                            ),
-                          )
-                        ],
                         backgroundColor: Colors.pinkAccent,
-                        initiallyExpanded: i==selected,
-                        onExpansionChanged: (expanded){
-                          if(expanded)
-                            setState(() {
-                              selected = i;
-                            });
-                          else setState(() {
-                            selected = -1;
-                          });
-                        },
                       ),
                     ),
                   ),
