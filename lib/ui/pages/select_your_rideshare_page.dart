@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
 import 'package:gmoh_app/io/repository/trip_route_repo.dart';
 import 'package:gmoh_app/ui/blocs/trip_route_bloc.dart';
-import 'package:gmoh_app/ui/pages/action_selection_page.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:gmoh_app/util/ride_share_item.dart';
@@ -157,7 +156,6 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
                     borderRadius: BorderRadius.circular(10),
                     child: GestureDetector(
                       child: ExpansionTile(
-                        maintainState: true,
                         leading: CircleAvatar(backgroundImage: AssetImage('${rides[index].rideShereIcon}'),),
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
