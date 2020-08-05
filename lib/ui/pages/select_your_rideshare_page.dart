@@ -24,6 +24,7 @@ class SelectRideSharePage extends StatefulWidget {
 class SelectRideSharePageState extends State<SelectRideSharePage> {
   Completer<GoogleMapController> _controller = Completer();
   final TripRouteResult _tripRouteResult;
+  int isExpandedItemIndex = -1;
   final Map<String, Marker> _markers = {};
   TripRouteBloc _tripRouteBloc;
   Polyline _polyline;
@@ -46,24 +47,22 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     RideShareItem(rideShereIcon: 'assets/images/lyftIcon.png', rideShareType: 'Lyft', rideShareCost: '\$42.99'),
   ];
 
-
-
   @override
   Widget build(BuildContext context) {
     final remoteConfigHelper = Provider.of<RemoteConfigHelper>(context);
     _goToStart(_tripRouteResult.origin);
     _addMarkers(_tripRouteResult.origin);
-    final coordinates = _tripRouteResult.routePoints
-        .map((point) => LatLng(point.latitude, point.longitude))
-        .toList();
-    _polyline = Polyline(
-        polylineId: PolylineId("trip"),
-        color: Colors.red,
-        points: coordinates,
-        width: 5
-    );
-    final initialPosition = _tripRouteResult.origin;
-    return buildTripConfirmationView(context, initialPosition);
+//    final coordinates = _tripRouteResult.routePoints
+//        .map((point) => LatLng(point.latitude, point.longitude))
+//        .toList();
+//    _polyline = Polyline(
+//        polylineId: PolylineId("trip"),
+//        color: Colors.red,
+//        points: coordinates,
+//        width: 5
+//    );
+//    final initialPosition = _tripRouteResult.origin;
+    return buildTripConfirmationView(context, LatLng(39.50, -98.35));
   }
 
   Future<void> _goToStart(LatLng start) async {
@@ -81,22 +80,86 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Stack(
-        children: <Widget>[
-          _buildGoogleMap(context, initialPosition),
-        ],
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/background1300.png"),
+              fit: BoxFit.fill),
+        ),
+        child: Column(
+          children: [
+            _buildGoogleMap(context, initialPosition),
+            _buildRideShareItem(),
+          ],
+        ),
       ),
     );
+  }
+
+  _buildRideShareItem() {
+    return Expanded(
+            child: Center(
+              child: ListView.builder(
+                shrinkWrap: true,
+                addAutomaticKeepAlives: false,
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                itemCount: rides.length,
+                itemBuilder: (context, index){
+                  return Container(
+                    margin: EdgeInsets.only(
+                        top: 10.0, right: 20.0, left: 20.0, bottom: 0.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: HexColor("#078B91")
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: GestureDetector(
+                        child: ExpansionTile(
+                          key: GlobalKey(),
+                          initiallyExpanded: (index == isExpandedItemIndex),
+                          onExpansionChanged: ((isExpanded){
+                            if(isExpanded){
+                              setState(() {
+                                isExpandedItemIndex = index;
+                              });
+                            }
+                          }),
+                          leading: CircleAvatar(backgroundImage: AssetImage('${rides[index].rideShereIcon}'),),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(rides[index].rideShareType,style: TextStyle(color: Colors.white),),
+                              Text(rides[index].rideShareCost,style: TextStyle(color: Colors.white),)
+                            ],
+                          ),
+                          backgroundColor: Colors.pinkAccent,
+                          children: [
+                            SizedBox(
+                              height: 50,
+                              width: double.infinity,
+                              child: FlatButton(child: Text("Confirm Ride",
+                                style: TextStyle(color: Colors.white
+                                ),
+                              ),
+                                  highlightColor: Colors.transparent,
+                                  color: Colors.transparent,
+                                  onPressed: () {}
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );},
+              ),
+            ),
+          );
   }
 
   Widget _buildGoogleMap(BuildContext context, LatLng initialPosition) {
     return Container(
       padding: EdgeInsets.fromLTRB(0, 72, 0, 0),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage("assets/images/background1300.png"),
-            fit: BoxFit.fill),
-      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -119,42 +182,7 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
                 },
                 markers: _markers.values.toSet(),
                 myLocationEnabled: true,
-                polylines: (_polyline != null) ? Set<Polyline>.of({_polyline}) : {},
-              ),
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: ListView.builder(
-                shrinkWrap: true,
-                addAutomaticKeepAlives: false,
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                itemCount: rides.length,
-                itemBuilder: (context, index){
-                return Container(
-                  margin: EdgeInsets.only(
-                      top: 10.0, right: 20.0, left: 20.0, bottom: 0.0),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: HexColor("#078B91")
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: GestureDetector(
-                      child: ExpansionTile(
-                        leading: CircleAvatar(backgroundImage: AssetImage('${rides[index].rideShereIcon}'),),
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(rides[index].rideShareType,style: TextStyle(color: Colors.white),),
-                            Text(rides[index].rideShareCost,style: TextStyle(color: Colors.white),)
-                          ],
-                        ),
-                        backgroundColor: Colors.pinkAccent,
-                      ),
-                    ),
-                  ),
-                );},
+//                polylines: (_polyline != null) ? Set<Polyline>.of({_polyline}) : {},
               ),
             ),
           ),

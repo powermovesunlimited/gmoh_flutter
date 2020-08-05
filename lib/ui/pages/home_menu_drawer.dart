@@ -187,7 +187,7 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer>
                     ),
                   ),
 //
-//   Uss the commented code below when you need to manually navate to a different page just update the navitagator and Text
+//   Use the commented code below when you need to manually navate to a different page just update the navitagator and Text
 //
 //                  ListTile(
 //                    title: Container(
