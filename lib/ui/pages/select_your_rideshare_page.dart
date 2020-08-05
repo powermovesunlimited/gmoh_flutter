@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gmoh_app/io/apis/google_api_services.dart';
-import 'package:gmoh_app/io/repository/trip_route_repo.dart';
 import 'package:gmoh_app/ui/blocs/trip_route_bloc.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
@@ -13,27 +11,25 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class SelectRideSharePage extends StatefulWidget {
-  final double latitude;
-  final double longitude;
+  final TripRouteResult _tripRouteResult;
 
 
-  SelectRideSharePage(this.latitude, this.longitude);
+  SelectRideSharePage(this._tripRouteResult);
 
   @override
   State<StatefulWidget> createState() =>
-      SelectRideSharePageState(LatLng(latitude, longitude));
+      SelectRideSharePageState(_tripRouteResult);
 }
 
 class SelectRideSharePageState extends State<SelectRideSharePage> {
   Completer<GoogleMapController> _controller = Completer();
-  final LatLng _targetDestination;
-  int _activeMeterIndex;
+  final TripRouteResult _tripRouteResult;
   final Map<String, Marker> _markers = {};
   TripRouteBloc _tripRouteBloc;
   Polyline _polyline;
   static const LatLng _DEFAULT_POSITION = LatLng(39.50, -98.35);
 
-  SelectRideSharePageState(this._targetDestination);
+  SelectRideSharePageState(this._tripRouteResult);
 
   List<RideShareItem> rides = [
     RideShareItem(rideShereIcon: 'assets/images/uberIcon.png', rideShareType: 'UBER', rideShareCost: '\$14.45'),
@@ -55,29 +51,19 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
   @override
   Widget build(BuildContext context) {
     final remoteConfigHelper = Provider.of<RemoteConfigHelper>(context);
-    _tripRouteBloc = TripRouteBloc(TripRouteRepository(GoogleApiService(remoteConfigHelper)));
-    return StreamBuilder(
-      stream: _tripRouteBloc.tripRouteObservable.stream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.data != null) {
-          TripRouteResult result = snapshot.data;
-          _goToStart(result.origin);
-          _addMarkers(result.origin);
-          final coordinates = result.routePoints
-              .map((point) => LatLng(point.latitude, point.longitude))
-              .toList();
-          _polyline = Polyline(
-              polylineId: PolylineId("trip"),
-              color: Colors.red,
-              points: coordinates,
-              width: 5
-          );
-        } else {
-          _tripRouteBloc.fetchTripRoute(_targetDestination);
-        }
-        return buildTripConfirmationView(context, _DEFAULT_POSITION);
-      },
+    _goToStart(_tripRouteResult.origin);
+    _addMarkers(_tripRouteResult.origin);
+    final coordinates = _tripRouteResult.routePoints
+        .map((point) => LatLng(point.latitude, point.longitude))
+        .toList();
+    _polyline = Polyline(
+        polylineId: PolylineId("trip"),
+        color: Colors.red,
+        points: coordinates,
+        width: 5
     );
+    final initialPosition = _tripRouteResult.origin;
+    return buildTripConfirmationView(context, initialPosition);
   }
 
   Future<void> _goToStart(LatLng start) async {
@@ -182,7 +168,7 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     final startMarker = createMapMarker(
         LatLng(initialPosition.latitude, initialPosition.longitude), "Start");
     final endMarker = createMapMarker(
-        LatLng(_targetDestination.latitude, _targetDestination.longitude),
+        LatLng(_tripRouteResult.destination.latitude, _tripRouteResult.destination.longitude),
         "Destination");
     _markers[startMarker.markerId.toString()] = startMarker;
     _markers[endMarker.markerId.toString()] = endMarker;
