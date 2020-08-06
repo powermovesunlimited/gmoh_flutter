@@ -12,13 +12,14 @@ import 'package:provider/provider.dart';
 
 class SelectRideSharePage extends StatefulWidget {
   final TripRouteResult _tripRouteResult;
+  final List<RideShareItem> _rides;
 
 
-  SelectRideSharePage(this._tripRouteResult);
+  SelectRideSharePage(this._tripRouteResult, this._rides);
 
   @override
   State<StatefulWidget> createState() =>
-      SelectRideSharePageState(_tripRouteResult);
+      SelectRideSharePageState(_tripRouteResult, this._rides);
 }
 
 class SelectRideSharePageState extends State<SelectRideSharePage> {
@@ -29,23 +30,10 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
   TripRouteBloc _tripRouteBloc;
   Polyline _polyline;
   static const LatLng _DEFAULT_POSITION = LatLng(39.50, -98.35);
+  final List<RideShareItem> _rides;
 
-  SelectRideSharePageState(this._tripRouteResult);
+  SelectRideSharePageState(this._tripRouteResult, this._rides);
 
-  List<RideShareItem> rides = [
-    RideShareItem(rideShereIcon: 'assets/images/uberIcon.png', rideShareType: 'UBER', rideShareCost: '\$14.45'),
-    RideShareItem(rideShereIcon: 'assets/images/lyftIcon.png', rideShareType: 'Lyft', rideShareCost: '\$10.15'),
-    RideShareItem(rideShereIcon: 'assets/images/uberIcon.png', rideShareType: 'UBER', rideShareCost: '\$7.83'),
-    RideShareItem(rideShereIcon: 'assets/images/lyftIcon.png', rideShareType: 'Lyft', rideShareCost: '\$42.99'),
-    RideShareItem(rideShereIcon: 'assets/images/uberIcon.png', rideShareType: 'UBER', rideShareCost: '\$14.45'),
-    RideShareItem(rideShereIcon: 'assets/images/lyftIcon.png', rideShareType: 'Lyft', rideShareCost: '\$10.15'),
-    RideShareItem(rideShereIcon: 'assets/images/uberIcon.png', rideShareType: 'UBER', rideShareCost: '\$7.83'),
-    RideShareItem(rideShereIcon: 'assets/images/lyftIcon.png', rideShareType: 'Lyft', rideShareCost: '\$42.99'),
-    RideShareItem(rideShereIcon: 'assets/images/uberIcon.png', rideShareType: 'UBER', rideShareCost: '\$14.45'),
-    RideShareItem(rideShereIcon: 'assets/images/lyftIcon.png', rideShareType: 'Lyft', rideShareCost: '\$10.15'),
-    RideShareItem(rideShereIcon: 'assets/images/uberIcon.png', rideShareType: 'UBER', rideShareCost: '\$7.83'),
-    RideShareItem(rideShereIcon: 'assets/images/lyftIcon.png', rideShareType: 'Lyft', rideShareCost: '\$42.99'),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +91,7 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
                 shrinkWrap: true,
                 addAutomaticKeepAlives: false,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                itemCount: rides.length,
+                itemCount: _rides.length,
                 itemBuilder: (context, index){
                   return Container(
                     margin: EdgeInsets.only(
@@ -125,12 +113,12 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
                               });
                             }
                           }),
-                          leading: CircleAvatar(backgroundImage: AssetImage('${rides[index].rideShereIcon}'),),
+                          leading: CircleAvatar(backgroundImage: AssetImage('${_rides[index].rideShereIcon}'),),
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(rides[index].rideShareType,style: TextStyle(color: Colors.white),),
-                              Text(rides[index].rideShareCost,style: TextStyle(color: Colors.white),)
+                              Text(_rides[index].rideShareType,style: TextStyle(color: Colors.white),),
+                              Text(_rides[index].rideShareCost,style: TextStyle(color: Colors.white),)
                             ],
                           ),
                           backgroundColor: Colors.pinkAccent,
