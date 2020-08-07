@@ -55,8 +55,6 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
 
   Future<void> _goToStart(LatLng start) async {
     final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: start, zoom: 12)));
   }
 
   Widget buildTripConfirmationView(
