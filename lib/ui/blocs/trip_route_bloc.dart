@@ -28,18 +28,19 @@ class TripRouteBloc {
     await _tripRouteRepository.getTripRoute(origin, destination);
     if (response.errorMessage == null) {
       final pointLatLngs = PolylinePoints().decodePolyline(response.directions.routes.first.overviewPolyline.points);
-      _subject.add(TripRouteResult(origin, pointLatLngs, null));
+      _subject.add(TripRouteResult(origin, destination, pointLatLngs, null));
     } else {
       _subject.add(
-          TripRouteResult(origin, null, ErrorState(response.errorMessage)));
+          TripRouteResult(origin, destination, null, ErrorState(response.errorMessage)));
     }
   }
 }
 
 class TripRouteResult {
   final LatLng origin;
+  final LatLng destination;
   final List<PointLatLng> routePoints;
   final ErrorState errorState;
 
-  TripRouteResult(this.origin, this.routePoints, this.errorState);
+  TripRouteResult(this.origin, this.destination, this.routePoints, this.errorState);
 }
