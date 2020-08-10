@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gmoh_app/io/database/location_database.dart';
 import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/drawer_bloc.dart';
-import 'package:gmoh_app/ui/blocs/trip_route_bloc.dart';
 import 'package:gmoh_app/ui/models/locator_page_model.dart';
 import 'package:gmoh_app/util/hex_color.dart';
-import 'package:gmoh_app/ui/pages/select_your_rideshare_page.dart';
-import 'package:gmoh_app/util/ride_share_item.dart';
-import 'package:gmoh_app/util/rides_list.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomeMenuDrawer extends StatefulWidget {
   const HomeMenuDrawer({
