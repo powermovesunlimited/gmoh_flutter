@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:gmoh_app/io/database/location_database.dart';
 import 'package:gmoh_app/io/models/home_location_result.dart';
+import 'package:gmoh_app/io/repository/location_repo.dart';
+import 'package:gmoh_app/ui/blocs/uber_prices_estimates_bloc.dart';
+import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/permissions_helper.dart';
 
@@ -21,11 +25,16 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
   final permissionsHelper = new PermissionsHelper();
 
   Position userPosition;
+  UserLocationsBloc _locationBloc;
 
   @override
   void initState() {
     attemptToRetrieveUserPosition();
     super.initState();
+
+    var locationDatabase = LocationDatabase();
+    _locationBloc = UserLocationsBloc(LocationRepository(locationDatabase));
+    UberPricesEstimatesBloc();
   }
 
   @override
