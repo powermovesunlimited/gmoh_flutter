@@ -108,8 +108,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
                 textColor: Colors.white,
                 elevation: 4,
                 onPressed: () async {
-                  attemptToRetrieveUserPosition(GoHome(),
-                      widget.homeLocationResult, _locationBloc, context);
+                  attemptToRetrieveUserPosition(GoHome(), context);
                 },
               ),
             ),
@@ -138,8 +137,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
                 textColor: Colors.white,
                 elevation: 4,
                 onPressed: () async {
-                  attemptToRetrieveUserPosition(GoSomewhereElse(),
-                      widget.homeLocationResult, _locationBloc, context);
+                  attemptToRetrieveUserPosition(GoSomewhereElse(), context);
                 },
               ),
             ),
@@ -162,17 +160,12 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
     });
   }
 
-  void attemptToRetrieveUserPosition(
-      RouteIntent intent,
-      HomeLocationResult homeLocationResult,
-      UserLocationsBloc locationBloc,
-      BuildContext context) async {
+  void attemptToRetrieveUserPosition(RouteIntent intent, BuildContext context) async {
     var locationPermissionGranted =
         await permissionsHelper.isLocationPermissionGranted();
 
     if (!locationPermissionGranted && !hasRequestedLocationPermission) {
-      requestLocationPermission(
-          intent, homeLocationResult, locationBloc, context);
+      requestLocationPermission(intent,context);
       return;
     } else if (locationPermissionGranted) {
       Position position = await Geolocator()
@@ -184,11 +177,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
     }
   }
 
-  void requestLocationPermission(
-      RouteIntent intent,
-      HomeLocationResult homeLocationResult,
-      UserLocationsBloc locationBloc,
-      BuildContext context) async {
+  void requestLocationPermission(RouteIntent intent, BuildContext context) async {
     switch (await permissionsHelper.requestLocationPermission()) {
       case PermissionStatus.denied:
         {
@@ -196,8 +185,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
             hasRequestedLocationPermission = false;
           });
           permissionsHelper.onLocationPermissionDenied(context).then((value) =>
-              findUserLocationThenNavigateToNextPage(
-                  intent, homeLocationResult, locationBloc, context));
+              findUserLocationThenNavigateToNextPage(intent, context));
         }
         break;
       case PermissionStatus.permanentlyDenied:
@@ -222,8 +210,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
             hasRequestedLocationPermission = false;
           });
           permissionsHelper.onLocationPermissionDenied(context).then((value) =>
-              findUserLocationThenNavigateToNextPage(
-                  intent, homeLocationResult, locationBloc, context));
+              findUserLocationThenNavigateToNextPage(intent, context));
         }
         break;
       case PermissionStatus.undetermined:
@@ -232,8 +219,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
             hasRequestedLocationPermission = false;
           });
           permissionsHelper.onLocationPermissionDenied(context).then((value) =>
-              findUserLocationThenNavigateToNextPage(
-                  intent, homeLocationResult, locationBloc, context));
+              findUserLocationThenNavigateToNextPage(intent, context));
         }
     }
   }
@@ -259,8 +245,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                HomeLocatorPage(route, intent),
+            builder: (context) => HomeLocatorPage(route, intent),
           ),
         );
       }
@@ -273,14 +258,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
     }
   }
 
-  Future findUserLocationThenNavigateToNextPage(
-      RouteIntent intent,
-      HomeLocationResult homeLocationResult,
-      UserLocationsBloc locationBloc,
-      BuildContext context) async {
-    print("destination in permission helper $intent");
-    
-      
+  Future findUserLocationThenNavigateToNextPage(RouteIntent intent, BuildContext context) async {
       Navigator.push(
         context,
         MaterialPageRoute(

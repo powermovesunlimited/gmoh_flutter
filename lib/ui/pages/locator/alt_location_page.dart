@@ -8,12 +8,13 @@ class AlternateLocationPage extends LocatorPage {
   AlternateLocationPage(RouteData route, RouteIntent intent) : super(route, intent);
 
   @override
-  LocatorPageState createState() => AlternateLocationState();
+  LocatorPageState createState() => AlternateLocationState(this.routeData);
 }
 
 class AlternateLocationState extends LocatorPageState {
+  final RouteData routeData;
 
-  AlternateLocationState() : super();
+  AlternateLocationState(this.routeData) : super(routeData);
 
   @override
   void initState() {

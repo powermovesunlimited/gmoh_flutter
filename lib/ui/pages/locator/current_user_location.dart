@@ -10,11 +10,12 @@ class CurrentUserLocationPage extends LocatorPage {
   CurrentUserLocationPage(RouteData routeData, RouteIntent routeIntent) : super(routeData, routeIntent);
 
   @override
-  LocatorPageState createState() => _CurrentUserLocationState();
+  LocatorPageState createState() => _CurrentUserLocationState(this.routeData);
 }
 
 class _CurrentUserLocationState extends LocatorPageState {
-  _CurrentUserLocationState() : super();
+  final RouteData routeData;
+  _CurrentUserLocationState(this.routeData) : super(routeData);
 
   @override
   String getHintText() {

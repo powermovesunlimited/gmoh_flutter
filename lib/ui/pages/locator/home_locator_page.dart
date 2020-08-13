@@ -3,7 +3,6 @@ import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
 import 'package:gmoh_app/ui/models/route_data.dart';
 import 'package:gmoh_app/ui/models/route_intent.dart';
 import 'package:gmoh_app/ui/pages/locator/locator_page.dart';
-import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 
 class HomeLocatorPage extends LocatorPage {
   static const String routeName = "/homeLocatorPage";
@@ -11,15 +10,16 @@ class HomeLocatorPage extends LocatorPage {
   HomeLocatorPage(RouteData route, RouteIntent intent) : super(route, intent);
 
   @override
-  LocatorPageState createState() => _HomeLocatorState();
+  LocatorPageState createState() => _HomeLocatorState(this.routeData);
 }
 
 class _HomeLocatorState extends LocatorPageState {
+  final RouteData routeData;
 
   var currentUserLocation;
   TextEditingController textEditingController = new TextEditingController();
 
-  _HomeLocatorState() : super();
+  _HomeLocatorState(this.routeData) : super(routeData);
   UserLocationsBloc _locationBloc;
 
   @override
