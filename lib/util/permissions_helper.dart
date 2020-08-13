@@ -2,7 +2,6 @@ import 'package:app_settings/app_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:gmoh_app/ui/pages/locator/current_user_location.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 abstract class PermissionDialogListener {
@@ -14,8 +13,8 @@ abstract class PermissionDialogListener {
 class PermissionsHelper {
   var userLocation;
 
-  requestLocationPermission() {
-    return Permission.location.request();
+  requestLocationPermission() async {
+    return await Permission.location.request();
   }
 
   Future<bool> isLocationPermissionGranted() {
