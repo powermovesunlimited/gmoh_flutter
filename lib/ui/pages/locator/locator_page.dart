@@ -307,7 +307,6 @@ class LocatorPageState extends State<LocatorPage> {
     final intent = widget.routeIntent;
     if (intent is GoHome) {
       if (routeData.origin != null && routeData.destination != null) {
-        print('trip map & home button click section: routeData.origin ${routeData.origin}, routeData.destination ${routeData.destination}');
         //go to map
         Navigator.push(
             context,
@@ -316,7 +315,6 @@ class LocatorPageState extends State<LocatorPage> {
                   TripConfirmationMap(routeData.origin, routeData.destination),
             ));
       } else if (routeData.destination == null) {
-        print('home locator page & home button click: routeData.origin ${routeData.origin}, routeData.destination ${routeData.destination}, widget.routeIntent ${widget.routeIntent}');
 
         //go to get home location
         Navigator.push(
@@ -327,7 +325,6 @@ class LocatorPageState extends State<LocatorPage> {
       }
     } else {
       if (routeData.destination != null) {
-        print('Trip map & somewhere else click section: routeData.origin ${routeData.origin}, routeData.destination ${routeData.destination}, widget.routeIntent ${widget.routeIntent}');
 
         // go to map
         Navigator.push(
@@ -337,7 +334,6 @@ class LocatorPageState extends State<LocatorPage> {
                   TripConfirmationMap(routeData.origin, routeData.destination),
             ));
       } else {
-        print('alternate location page & somewhere else click: routeData.origin ${routeData.origin}, routeData.destination ${routeData.destination}, widget.routeIntent ${widget.routeIntent}');
         //go to get alt location
         Navigator.push(
             context,
