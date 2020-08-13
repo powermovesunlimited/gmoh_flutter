@@ -3,23 +3,30 @@ import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
 import 'package:gmoh_app/io/repository/destinations_search_repo.dart';
 import 'package:gmoh_app/ui/blocs/destination_search_bloc.dart';
+import 'package:gmoh_app/ui/models/route_data.dart';
+import 'package:gmoh_app/ui/models/route_intent.dart';
+import 'package:gmoh_app/ui/pages/locator/alt_location_page.dart';
+import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
+import 'package:gmoh_app/ui/pages/trip_confirmation_map.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/subjects.dart';
 
 abstract class LocatorPage extends StatefulWidget {
+  final RouteData routeData;
+  final RouteIntent routeIntent;
 
-  LocatorPage(userPosition);
+  LocatorPage(this.routeData, this.routeIntent);
 
   LocatorPageState createState();
 }
 
 class LocatorPageState extends State<LocatorPage> {
-
   Position userPosition;
 
-  LocatorPageState(this.userPosition);
+  LocatorPageState(this.routeData);
 
   DestinationSearchBloc _bloc;
 
@@ -28,6 +35,7 @@ class LocatorPageState extends State<LocatorPage> {
   final onTextChangedListener = new PublishSubject<String>();
 
   var _textController = new TextEditingController();
+  final RouteData routeData;
 
   @override
   void initState() {
@@ -141,7 +149,7 @@ class LocatorPageState extends State<LocatorPage> {
         height: 40,
         child: RaisedButton(
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -176,7 +184,7 @@ class LocatorPageState extends State<LocatorPage> {
         height: 40,
         child: RaisedButton(
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -195,11 +203,6 @@ class LocatorPageState extends State<LocatorPage> {
           color: Colors.pinkAccent,
           textColor: Colors.white,
           elevation: 4,
-          onPressed: () {
-            // this is where you handle the capturing of the address
-            //use address in the next page
-            // if home was click save address then move on to next page
-          },
         ),
       ),
     );
@@ -221,26 +224,25 @@ class LocatorPageState extends State<LocatorPage> {
           child: Container(
             child: ListView.builder(
               itemCount: searchResult.results.length,
-              itemBuilder: (BuildContext context, int index) =>
-                  GestureDetector(
-                    child: createSuggestionItemView(
-                        context, index, searchResult),
-                    onTap: () async {
-                      final placeDetails = await _bloc
-                          .getPlaceDetails(searchResult.results[index].placeId);
-                      final latitude = placeDetails.geometry.location.lat;
-                      final longitude = placeDetails.geometry.location.lng;
-                      final address = placeDetails.formattedAddress;
-                      _addressEntered.add(address);
-                      _addressEntered.add(latitude);
-                      _addressEntered.add(longitude);
-                      FocusScope.of(context).unfocus();
-                      setState(() {
-                        _textController.text = placeDetails.formattedAddress;
-                        searchResult.results.clear();
-                      });
-                    },
-                  ),
+              itemBuilder: (BuildContext context, int index) => GestureDetector(
+                child: createSuggestionItemView(context, index, searchResult),
+                onTap: () async {
+                  final placeDetails = await _bloc
+                      .getPlaceDetails(searchResult.results[index].placeId);
+                  final latitude = placeDetails.geometry.location.lat;
+                  final longitude = placeDetails.geometry.location.lng;
+                  final address = placeDetails.formattedAddress;
+                  _addressEntered.add(address);
+                  _addressEntered.add(latitude);
+                  _addressEntered.add(longitude);
+                  FocusScope.of(context).unfocus();
+                  setState(() {
+                    routeData.destination = LatLng(latitude, longitude);
+                    _textController.text = placeDetails.formattedAddress;
+                    searchResult.results.clear();
+                  });
+                },
+              ),
             ),
           ),
         ),
@@ -248,8 +250,8 @@ class LocatorPageState extends State<LocatorPage> {
     );
   }
 
-  Widget createSuggestionItemView(BuildContext context, int index,
-      DestinationSearchResult searchResult) {
+  Widget createSuggestionItemView(
+      BuildContext context, int index, DestinationSearchResult searchResult) {
     var placeSuggestion = searchResult.results[index];
     return Container(
       child: Padding(
@@ -302,11 +304,43 @@ class LocatorPageState extends State<LocatorPage> {
   }
 
   void navigateToNextPage() {
-    // placeholder function for navigation to next page
-  }
+    final intent = widget.routeIntent;
+    if (intent is GoHome) {
+      if (routeData.origin != null && routeData.destination != null) {
+        //go to map
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  TripConfirmationMap(routeData.origin, routeData.destination),
+            ));
+      } else if (routeData.destination == null) {
 
-  Set useEnteredAddress() {
-    return _addressEntered;
-  }
+        //go to get home location
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeLocatorPage(routeData, intent),
+            ));
+      }
+    } else {
+      if (routeData.destination != null) {
 
+        // go to map
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  TripConfirmationMap(routeData.origin, routeData.destination),
+            ));
+      } else {
+        //go to get alt location
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AlternateLocationPage(routeData, intent),
+            ));
+      }
+    }
+  }
 }

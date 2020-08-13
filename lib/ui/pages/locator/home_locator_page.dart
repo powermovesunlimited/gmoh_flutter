@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
+import 'package:gmoh_app/ui/models/route_data.dart';
+import 'package:gmoh_app/ui/models/route_intent.dart';
 import 'package:gmoh_app/ui/pages/locator/locator_page.dart';
 
 class HomeLocatorPage extends LocatorPage {
   static const String routeName = "/homeLocatorPage";
-  final Position position;
 
-  HomeLocatorPage(this.position) : super(position);
+  HomeLocatorPage(RouteData route, RouteIntent intent) : super(route, intent);
 
   @override
-  LocatorPageState createState() => _HomeLocatorState(position);
+  LocatorPageState createState() => _HomeLocatorState(this.routeData);
 }
 
 class _HomeLocatorState extends LocatorPageState {
-  _HomeLocatorState(Position position) : super(position);
+  final RouteData routeData;
+
+  var currentUserLocation;
+  TextEditingController textEditingController = new TextEditingController();
+
+  _HomeLocatorState(this.routeData) : super(routeData);
   UserLocationsBloc _locationBloc;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   String getHintText() {
@@ -30,17 +40,5 @@ class _HomeLocatorState extends LocatorPageState {
   @override
   String getContinueButtonText() {
     return "Set as Home and Go";
-  }
-
-  @override
-  void navigateToNextPage() {
-    // save address as home
-    if (useEnteredAddress().isNotEmpty) {
-      var homeAddress = useEnteredAddress();
-      _locationBloc.setHomeLocation(
-          homeAddress.first, homeAddress.elementAt(1), homeAddress.last);
-        // navigate to trip map page
-        //Navigator.pushNamed(context, 'alt_location_page');
-    }
   }
 }

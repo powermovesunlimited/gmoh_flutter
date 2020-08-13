@@ -17,13 +17,7 @@ class TripRouteBloc {
 
   TripRouteBloc(this._tripRouteRepository);
 
-  fetchTripRoute(LatLng destination, {LatLng origin}) async {
-    if (origin == null) {
-      Position currentPosition = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      origin = LatLng(currentPosition.latitude, currentPosition.longitude);
-    }
-
+  fetchTripRoute(LatLng destination, LatLng origin) async {
     final TripRouteResponse response =
     await _tripRouteRepository.getTripRoute(origin, destination);
     if (response.errorMessage == null) {

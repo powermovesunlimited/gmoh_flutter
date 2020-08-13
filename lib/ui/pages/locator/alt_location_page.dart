@@ -1,19 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:gmoh_app/ui/models/route_data.dart';
+import 'package:gmoh_app/ui/models/route_intent.dart';
 import 'package:gmoh_app/ui/pages/locator/locator_page.dart';
 
 class AlternateLocationPage extends LocatorPage {
   static const String routeName = "/altLocationPage";
-  final Position position;
 
-  AlternateLocationPage(this.position) : super(position);
+  AlternateLocationPage(RouteData route, RouteIntent intent) : super(route, intent);
 
   @override
-  LocatorPageState createState() => AlternateLocationState(position);
+  LocatorPageState createState() => AlternateLocationState(this.routeData);
 }
 
 class AlternateLocationState extends LocatorPageState {
-  AlternateLocationState(position) : super(position);
+  final RouteData routeData;
+
+  AlternateLocationState(this.routeData) : super(routeData);
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   String getHintText() {
@@ -28,15 +34,5 @@ class AlternateLocationState extends LocatorPageState {
   @override
   String getContinueButtonText() {
     return "Set Address and Go";
-  }
-
-  @override
-  void navigateToNextPage() {
-    //navigate to trip map page
-    if (useEnteredAddress().isNotEmpty) {
-      var enteredAddress = useEnteredAddress();
-      // navigate to trip map page
-      //Navigator.pushNamed(context, 'alt_location_page');
-    }
   }
 }
