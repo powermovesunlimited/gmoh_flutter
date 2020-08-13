@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
+import 'package:gmoh_app/ui/models/route_data.dart';
+import 'package:gmoh_app/ui/models/route_intent.dart';
 import 'package:gmoh_app/ui/pages/locator/locator_page.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 
 class HomeLocatorPage extends LocatorPage {
   static const String routeName = "/homeLocatorPage";
 
-  HomeLocatorPage(LatLng latLng) : super();
+  HomeLocatorPage(RouteData route, RouteIntent intent) : super(route, intent);
 
   @override
   LocatorPageState createState() => _HomeLocatorState();
@@ -38,17 +40,5 @@ class _HomeLocatorState extends LocatorPageState {
   @override
   String getContinueButtonText() {
     return "Set as Home and Go";
-  }
-
-  @override
-  void navigateToNextPage() {
-    // save address as home
-//    if (userEnteredAddress().isNotEmpty) {
-//      var homeAddress = userEnteredAddress();
-//      _locationBloc.setHomeLocation(
-//          homeAddress.first, homeAddress.elementAt(1), homeAddress.last);
-//      // navigate to trip map page
-//      //Navigator.pushNamed(context, 'alt_location_page');
-//    }
   }
 }

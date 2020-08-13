@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/io/database/location_database.dart';
 import 'package:gmoh_app/io/models/home_location_result.dart';
-import 'package:gmoh_app/io/models/location_model.dart';
 import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
+import 'package:gmoh_app/ui/models/route_data.dart';
+import 'package:gmoh_app/ui/models/route_intent.dart';
 import 'package:gmoh_app/ui/pages/locator/alt_location_page.dart';
 import 'package:gmoh_app/ui/pages/locator/current_user_location.dart';
 import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
@@ -107,7 +108,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
                 textColor: Colors.white,
                 elevation: 4,
                 onPressed: () async {
-                  attemptToRetrieveUserPosition("Home",
+                  attemptToRetrieveUserPosition(GoHome(),
                       widget.homeLocationResult, _locationBloc, context);
                 },
               ),
@@ -137,7 +138,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
                 textColor: Colors.white,
                 elevation: 4,
                 onPressed: () async {
-                  attemptToRetrieveUserPosition("Somewhere Else",
+                  attemptToRetrieveUserPosition(GoSomewhereElse(),
                       widget.homeLocationResult, _locationBloc, context);
                 },
               ),
@@ -162,7 +163,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
   }
 
   void attemptToRetrieveUserPosition(
-      String destination,
+      RouteIntent intent,
       HomeLocationResult homeLocationResult,
       UserLocationsBloc locationBloc,
       BuildContext context) async {
@@ -171,7 +172,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
 
     if (!locationPermissionGranted && !hasRequestedLocationPermission) {
       requestLocationPermission(
-          destination, homeLocationResult, locationBloc, context);
+          intent, homeLocationResult, locationBloc, context);
       return;
     } else if (locationPermissionGranted) {
       Position position = await Geolocator()
@@ -179,12 +180,12 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
       setState(() {
         userPosition = position;
       });
-      useGPSLocationThenNavigateToNextPage(destination);
+      useGPSLocationThenNavigateToNextPage(intent);
     }
   }
 
   void requestLocationPermission(
-      String destination,
+      RouteIntent intent,
       HomeLocationResult homeLocationResult,
       UserLocationsBloc locationBloc,
       BuildContext context) async {
@@ -196,7 +197,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
           });
           permissionsHelper.onLocationPermissionDenied(context).then((value) =>
               findUserLocationThenNavigateToNextPage(
-                  destination, homeLocationResult, locationBloc, context));
+                  intent, homeLocationResult, locationBloc, context));
         }
         break;
       case PermissionStatus.permanentlyDenied:
@@ -212,7 +213,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
           setState(() {
             hasRequestedLocationPermission = true;
           });
-          useGPSLocationThenNavigateToNextPage(destination);
+          useGPSLocationThenNavigateToNextPage(intent);
         }
         break;
       case PermissionStatus.restricted:
@@ -222,7 +223,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
           });
           permissionsHelper.onLocationPermissionDenied(context).then((value) =>
               findUserLocationThenNavigateToNextPage(
-                  destination, homeLocationResult, locationBloc, context));
+                  intent, homeLocationResult, locationBloc, context));
         }
         break;
       case PermissionStatus.undetermined:
@@ -232,24 +233,26 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
           });
           permissionsHelper.onLocationPermissionDenied(context).then((value) =>
               findUserLocationThenNavigateToNextPage(
-                  destination, homeLocationResult, locationBloc, context));
+                  intent, homeLocationResult, locationBloc, context));
         }
     }
   }
 
-  Future useGPSLocationThenNavigateToNextPage(String destination) async {
+  Future useGPSLocationThenNavigateToNextPage(RouteIntent intent) async {
     Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    RouteData route = RouteData();
+    route.origin = LatLng(position.latitude, position.longitude);
 
-    if (destination == "Home") {
+    if (intent is GoHome) {
       if (widget.homeLocationResult is HomeLocationSet) {
         // take user to trip map page
-        var homeAddress = _locationBloc.getHomeLocation() as Location;
+        final homeAddress = (widget.homeLocationResult as HomeLocationSet).location;
+        route.destination = LatLng(homeAddress.latitude, homeAddress.longitude);
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TripConfirmationMap(
-                homeAddress.latitude, homeAddress.longitude),
+            builder: (context) => TripConfirmationMap(route.origin, route.destination),
           ),
         );
       } else if (widget.homeLocationResult is HomeLocationNotSet) {
@@ -257,52 +260,32 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
           context,
           MaterialPageRoute(
             builder: (context) =>
-                HomeLocatorPage(LatLng(position.latitude, position.longitude)),
+                HomeLocatorPage(route, intent),
           ),
         );
       }
-    } else if (destination == "Somewhere Else") {
+    } else {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AlternateLocationPage(
-              LatLng(position.latitude, position.longitude),
-            ),
+            builder: (context) => AlternateLocationPage(route, intent),
           ));
     }
   }
 
   Future findUserLocationThenNavigateToNextPage(
-      String destination,
+      RouteIntent intent,
       HomeLocationResult homeLocationResult,
       UserLocationsBloc locationBloc,
       BuildContext context) async {
-    print("destination in permission helper $destination");
-
-    if (destination == "Home") {
-      if (homeLocationResult is HomeLocationSet) {
-        // take user to trip map page
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CurrentUserLocationPage("Trip Map"),
-          ),
-        );
-      } else if (homeLocationResult is HomeLocationNotSet) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CurrentUserLocationPage(destination),
-          ),
-        );
-      }
-    } else if (destination == "Somewhere Else") {
+    print("destination in permission helper $intent");
+    
+      
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CurrentUserLocationPage(destination),
+          builder: (context) => CurrentUserLocationPage(RouteData(), intent),
         ),
       );
-    }
   }
 }

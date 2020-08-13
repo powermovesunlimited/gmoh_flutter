@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gmoh_app/io/models/home_location_result.dart';
+import 'package:gmoh_app/ui/models/route_data.dart';
+import 'package:gmoh_app/ui/models/route_intent.dart';
 import 'package:gmoh_app/ui/pages/locator/locator_page.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CurrentUserLocationPage extends LocatorPage {
   static const String routeName = "/currentUserLocationPage";
-
-  CurrentUserLocationPage(String destination) : super();
+  CurrentUserLocationPage(RouteData routeData, RouteIntent routeIntent) : super(routeData, routeIntent);
 
   @override
   LocatorPageState createState() => _CurrentUserLocationState();
@@ -27,16 +29,5 @@ class _CurrentUserLocationState extends LocatorPageState {
   @override
   String getContinueButtonText() {
     return "Set as Current Location";
-  }
-
-  @override
-  void navigateToNextPage() {
-    //navigate back to action selection page
-    if (userEnteredAddress().isNotEmpty) {
-      var latitude = userEnteredAddress().elementAt(1);
-      var longitude = userEnteredAddress().last;
-      var startLocation = LatLng(latitude, longitude);
-      Navigator.pop(context, '$startLocation');
-    }
   }
 }

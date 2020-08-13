@@ -9,25 +9,24 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class TripConfirmationMap extends StatefulWidget {
-  final double latitude;
-  final double longitude;
+  final LatLng origin;
+  final LatLng destination;
 
-  TripConfirmationMap(this.latitude, this.longitude);
+  TripConfirmationMap(this.origin, this.destination);
 
   @override
   State<StatefulWidget> createState() =>
-      TripConfirmationMapState(LatLng(latitude, longitude));
+      TripConfirmationMapState();
 }
 
 class TripConfirmationMapState extends State<TripConfirmationMap> {
   Completer<GoogleMapController> _controller = Completer();
-  final LatLng _targetDestination;
   final Map<String, Marker> _markers = {};
   TripRouteBloc _tripRouteBloc;
   Polyline _polyline;
   static const LatLng _DEFAULT_POSITION = LatLng(39.50, -98.35);
 
-  TripConfirmationMapState(this._targetDestination);
+  TripConfirmationMapState();
 
 
 
@@ -52,7 +51,7 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
               width: 5
           );
         } else {
-          _tripRouteBloc.fetchTripRoute(_targetDestination);
+          _tripRouteBloc.fetchTripRoute(widget.destination, widget.origin );
         }
         return buildTripConfirmationView(context, _DEFAULT_POSITION);
       },
@@ -109,7 +108,7 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
     final startMarker = createMapMarker(
         LatLng(initialPosition.latitude, initialPosition.longitude), "Start");
     final endMarker = createMapMarker(
-        LatLng(_targetDestination.latitude, _targetDestination.longitude),
+        LatLng(widget.destination.latitude, widget.destination.longitude),
         "Destination");
     _markers[startMarker.markerId.toString()] = startMarker;
     _markers[endMarker.markerId.toString()] = endMarker;

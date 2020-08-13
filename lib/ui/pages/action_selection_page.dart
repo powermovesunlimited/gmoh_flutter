@@ -46,7 +46,7 @@ class _ActionSelectionPageState extends State<ActionSelectionPage> {
           if (snapshot.hasData) {
             return ActionSelectionView(HomeLocationSet(snapshot.data));
           } else if (!hasLoaded) {
-            _locationBloc.getHomeLocation();
+            _locationBloc.fetchHomeLocation();
             hasLoaded = true;
           }
           return ActionSelectionView(HomeLocationNotSet());

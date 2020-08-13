@@ -25,7 +25,7 @@ main() => {
     final locationBloc = UserLocationsBloc(mockLocationRepository);
 
     scheduleMicrotask((){
-      locationBloc.getHomeLocation();
+      locationBloc.fetchHomeLocation();
     });
 
    await expectLater(

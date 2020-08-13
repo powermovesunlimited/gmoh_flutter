@@ -21,7 +21,7 @@ class UserLocationsBloc implements BlocBase {
     _resultSubject.close();
   }
 
-  getHomeLocation() async {
+  fetchHomeLocation() async {
     Location location = await _repository.getHomeLocation();
     if(location != null){
       _resultSubject.add(location);

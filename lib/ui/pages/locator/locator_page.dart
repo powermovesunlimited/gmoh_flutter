@@ -3,14 +3,17 @@ import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
 import 'package:gmoh_app/io/repository/destinations_search_repo.dart';
 import 'package:gmoh_app/ui/blocs/destination_search_bloc.dart';
+import 'package:gmoh_app/ui/models/route_data.dart';
+import 'package:gmoh_app/ui/models/route_intent.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/subjects.dart';
 
 abstract class LocatorPage extends StatefulWidget {
-
-  LocatorPage();
+  final RouteData routeData;
+  final RouteIntent routeIntent;
+  LocatorPage(this.routeData, this.routeIntent);
 
   LocatorPageState createState();
 }
@@ -302,11 +305,21 @@ class LocatorPageState extends State<LocatorPage> {
   }
 
   void navigateToNextPage() {
-    // placeholder function for navigation to next page
-  }
-
-  Set userEnteredAddress() {
-    return _addressEntered;
+    final routeData = widget.routeData;
+    final intent = widget.routeIntent;
+    if(intent is GoHome){
+      if(routeData.origin != null && routeData.destination != null){
+        //go to map
+      }else if(routeData.destination == null) {
+        //go to get home location
+      }
+    } else {
+      if(routeData.destination != null){
+        // go to map
+      }else{
+        //go to get alt location
+      }
+    }
   }
 
 }
