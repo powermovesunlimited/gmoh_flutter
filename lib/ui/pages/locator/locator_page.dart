@@ -10,7 +10,7 @@ import 'package:rxdart/subjects.dart';
 
 abstract class LocatorPage extends StatefulWidget {
 
-  LocatorPage(userPosition);
+  LocatorPage();
 
   LocatorPageState createState();
 }
@@ -19,7 +19,7 @@ class LocatorPageState extends State<LocatorPage> {
 
   Position userPosition;
 
-  LocatorPageState(this.userPosition);
+  LocatorPageState();
 
   DestinationSearchBloc _bloc;
 
@@ -305,7 +305,7 @@ class LocatorPageState extends State<LocatorPage> {
     // placeholder function for navigation to next page
   }
 
-  Set useEnteredAddress() {
+  Set userEnteredAddress() {
     return _addressEntered;
   }
 

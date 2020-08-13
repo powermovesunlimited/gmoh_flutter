@@ -1,19 +1,23 @@
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/ui/pages/locator/locator_page.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AlternateLocationPage extends LocatorPage {
   static const String routeName = "/altLocationPage";
-  final Position position;
 
-  AlternateLocationPage(this.position) : super(position);
+  AlternateLocationPage(LatLng latLng) : super();
 
   @override
-  LocatorPageState createState() => AlternateLocationState(position);
+  LocatorPageState createState() => AlternateLocationState();
 }
 
 class AlternateLocationState extends LocatorPageState {
-  AlternateLocationState(position) : super(position);
+
+  AlternateLocationState() : super();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   String getHintText() {
@@ -33,8 +37,8 @@ class AlternateLocationState extends LocatorPageState {
   @override
   void navigateToNextPage() {
     //navigate to trip map page
-    if (useEnteredAddress().isNotEmpty) {
-      var enteredAddress = useEnteredAddress();
+    if (userEnteredAddress().isNotEmpty) {
+      var enteredAddress = userEnteredAddress();
       // navigate to trip map page
       //Navigator.pushNamed(context, 'alt_location_page');
     }

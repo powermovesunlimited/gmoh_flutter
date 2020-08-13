@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/ui/pages/locator/locator_page.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CurrentUserLocationPage extends LocatorPage {
   static const String routeName = "/currentUserLocationPage";
-  final Position position;
 
-  CurrentUserLocationPage(this.position) : super(position);
+  CurrentUserLocationPage(String destination) : super();
 
   @override
-  LocatorPageState createState() => _CurrentUserLocationState(position);
+  LocatorPageState createState() => _CurrentUserLocationState();
 }
 
 class _CurrentUserLocationState extends LocatorPageState {
-  _CurrentUserLocationState(position) : super(position);
+  _CurrentUserLocationState() : super();
 
   @override
   String getHintText() {
@@ -33,9 +32,11 @@ class _CurrentUserLocationState extends LocatorPageState {
   @override
   void navigateToNextPage() {
     //navigate back to action selection page
-    if (useEnteredAddress().isNotEmpty) {
-      var enteredAddress = useEnteredAddress();
-      Navigator.pop(context, 'action_selection/$enteredAddress');
+    if (userEnteredAddress().isNotEmpty) {
+      var latitude = userEnteredAddress().elementAt(1);
+      var longitude = userEnteredAddress().last;
+      var startLocation = LatLng(latitude, longitude);
+      Navigator.pop(context, '$startLocation');
     }
   }
 }

@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
 import 'package:gmoh_app/ui/pages/locator/locator_page.dart';
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 
 class HomeLocatorPage extends LocatorPage {
   static const String routeName = "/homeLocatorPage";
-  final Position position;
 
-  HomeLocatorPage(this.position) : super(position);
+  HomeLocatorPage(LatLng latLng) : super();
 
   @override
-  LocatorPageState createState() => _HomeLocatorState(position);
+  LocatorPageState createState() => _HomeLocatorState();
 }
 
 class _HomeLocatorState extends LocatorPageState {
-  _HomeLocatorState(Position position) : super(position);
+
+  var currentUserLocation;
+  TextEditingController textEditingController = new TextEditingController();
+
+  _HomeLocatorState() : super();
   UserLocationsBloc _locationBloc;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   String getHintText() {
@@ -35,12 +43,12 @@ class _HomeLocatorState extends LocatorPageState {
   @override
   void navigateToNextPage() {
     // save address as home
-    if (useEnteredAddress().isNotEmpty) {
-      var homeAddress = useEnteredAddress();
-      _locationBloc.setHomeLocation(
-          homeAddress.first, homeAddress.elementAt(1), homeAddress.last);
-        // navigate to trip map page
-        //Navigator.pushNamed(context, 'alt_location_page');
-    }
+//    if (userEnteredAddress().isNotEmpty) {
+//      var homeAddress = userEnteredAddress();
+//      _locationBloc.setHomeLocation(
+//          homeAddress.first, homeAddress.elementAt(1), homeAddress.last);
+//      // navigate to trip map page
+//      //Navigator.pushNamed(context, 'alt_location_page');
+//    }
   }
 }

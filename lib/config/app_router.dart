@@ -6,6 +6,7 @@ import 'package:gmoh_app/ui/pages/locator/current_user_location.dart';
 import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
 import 'package:gmoh_app/ui/pages/ride_party_page.dart';
 import 'package:gmoh_app/ui/pages/trip_confirmation_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AppRouter {
   static Router router = Router();
@@ -19,14 +20,12 @@ class AppRouter {
 
   static Handler _alternateLocationPageHandler =
       Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
-        var position = (params['position']);
-        return AlternateLocationPage(position);
+        return AlternateLocationPage(LatLng(0,0));
   });
 
   static Handler _homeLocatorPageHandler =
       Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
-        var position = (params['position']);
-        return HomeLocatorPage(position);
+        return HomeLocatorPage(LatLng(0,0));
   });
 
   static Handler _mapPageHandler =
@@ -38,8 +37,7 @@ class AppRouter {
 
   static Handler _currentUserLocationPageHandler =
   Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
-    var position = (params['position']);
-    return CurrentUserLocationPage(position);
+    return CurrentUserLocationPage("destination");
   });
 
   static void setupRouter() {
