@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
         FutureProvider(create: (_) => RemoteConfigHelper.getInstance()),
-    ],child:MaterialApp(
+      ],child:MaterialApp(
         title: 'Flutter Demo',
         initialRoute: 'action_selection',
         onGenerateRoute: AppRouter.router.generator,

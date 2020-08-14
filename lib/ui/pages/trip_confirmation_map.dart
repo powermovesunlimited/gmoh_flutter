@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
 import 'package:gmoh_app/io/repository/trip_route_repo.dart';
 import 'package:gmoh_app/ui/blocs/trip_route_bloc.dart';
+import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -28,12 +29,11 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
 
   TripConfirmationMapState();
 
-
-
   @override
   Widget build(BuildContext context) {
     final remoteConfigHelper = Provider.of<RemoteConfigHelper>(context);
-    _tripRouteBloc = TripRouteBloc(TripRouteRepository(GoogleApiService(remoteConfigHelper)));
+    _tripRouteBloc = TripRouteBloc(
+        TripRouteRepository(GoogleApiService(remoteConfigHelper)));
     return StreamBuilder(
       stream: _tripRouteBloc.tripRouteObservable.stream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -48,8 +48,7 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
               polylineId: PolylineId("trip"),
               color: Colors.red,
               points: coordinates,
-              width: 5
-          );
+              width: 5);
         } else {
           _tripRouteBloc.fetchTripRoute(widget.destination, widget.origin );
         }
@@ -66,41 +65,143 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
 
   Widget buildTripConfirmationView(
       BuildContext context, LatLng initialPosition) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Trip Plan Confirmation'),
-        backgroundColor: Colors.green[700],
-      ),
-      body: Stack(
-        children: <Widget>[
-          _buildGoogleMap(context, initialPosition),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.flag),
-        onPressed: () {},
+    return Material(
+      type: MaterialType.transparency,
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/background1300.png"),
+              fit: BoxFit.fill),
+        ),
+        child: Container(
+            child: Stack(
+          children: <Widget>[
+            AppBar(
+              backgroundColor: Colors.transparent,
+            ),
+            setupPageTitleCard(),
+            setupTripMap(initialPosition),
+            setupEditButton(),
+            setupContinueButton()
+          ],
+        )),
       ),
     );
   }
 
-  Widget _buildGoogleMap(BuildContext context, LatLng initialPosition) {
+  Container setupContinueButton() {
     return Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: GoogleMap(
-          zoomGesturesEnabled: true,
-          mapType: MapType.normal,
-          initialCameraPosition: CameraPosition(
-            target: initialPosition,
-            zoom: 5,
+      margin: EdgeInsets.only(top: 630.0, right: 24.0, left: 220.0),
+      child: SizedBox(
+        width: double.infinity,
+        height: 40,
+        child: RaisedButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Continue",
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w400)),
+              Icon(Icons.chevron_right),
+            ],
           ),
-          onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
-          },
-          markers: _markers.values.toSet(),
-          myLocationEnabled: true,
-          polylines: (_polyline != null) ? Set<Polyline>.of({_polyline}) : {},
+          color: Colors.pinkAccent,
+          textColor: Colors.white,
+          elevation: 4,
+          onPressed: () { },
+        ),
+      ),
+    );
+  }
+
+  Container setupEditButton() {
+    return Container(
+        margin: const EdgeInsets.only(top: 630.0, right: 220.0, left: 24.0),
+        child: SizedBox(
+          width: double.infinity,
+          height: 40,
+          child: RaisedButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Icons.chevron_left),
+                Text("Edit",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w400)),
+              ],
+            ),
+            color: Colors.pinkAccent,
+            textColor: Colors.white,
+            elevation: 4,
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+          ),
         ));
+  }
+
+  Container setupTripMap(LatLng initialPosition) {
+    return Container(
+        margin: const EdgeInsets.only(top: 214.0, right: 24.0, left: 24.0),
+        height: 400,
+        width: 440,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4), color: Colors.white),
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: GoogleMap(
+            zoomGesturesEnabled: true,
+            mapType: MapType.normal,
+            initialCameraPosition: CameraPosition(
+              target: initialPosition,
+              zoom: 5,
+            ),
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+            markers: _markers.values.toSet(),
+            myLocationEnabled: true,
+            polylines: (_polyline != null) ? Set<Polyline>.of({_polyline}) : {},
+          ),
+        ));
+  }
+
+  Container setupPageTitleCard() {
+    return Container(
+      margin: EdgeInsets.only(top: 36.0),
+      child: Container(
+        margin: EdgeInsets.only(top: 64.0, right: 24.0, left: 24.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          gradient: LinearGradient(
+              colors: [HexColor("#078B91"), HexColor("#336D6B")]),
+        ),
+        child: SizedBox(
+          width: double.infinity,
+          height: 88,
+          child: Center(
+            child: Text(
+              "Your Trip Map",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w400),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   void _addMarkers(LatLng initialPosition) {
