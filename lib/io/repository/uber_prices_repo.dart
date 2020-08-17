@@ -9,7 +9,7 @@ class UberPricesRepo {
   ApiProvider _provider = ApiProvider();
 
   Future<UberPricesEstimates> fetchUberPricesEstimatesData() async {
-    final response = await _provider.get("/v1.2/estimates/price?start_latitude=37.7752315&start_longitude=-122.418075&end_latitude=37.7752415&end_longitude=-122.518075", head(url));
+    final response = await _provider.get("/v1.2/products?latitude=37.7752315&longitude=-122.418075", head(url));
     return UberPricesEstimates.fromJson(response);
   }
 }

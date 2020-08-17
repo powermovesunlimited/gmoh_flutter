@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class RemoteConfigHelper {
   static const String _GOOGLE_API_KEY = "google_api_key";
+  static const String _UBER_API_TOKEN = "uber_api_token";
 
   final RemoteConfig _remoteConfig;
 
@@ -34,4 +35,5 @@ class RemoteConfigHelper {
   }
 
   String get googleApiKey => _remoteConfig.getString(_GOOGLE_API_KEY);
+  String get uberApiToken => _remoteConfig.getString(_UBER_API_TOKEN);
 }

@@ -68,4 +68,6 @@ class Prices {
     data['currency_code'] = this.currencyCode;
     return data;
   }
+
+
 }

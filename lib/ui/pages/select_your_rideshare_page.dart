@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gmoh_app/ui/blocs/estimate_ride_price.dart';
 import 'package:gmoh_app/ui/blocs/trip_route_bloc.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
@@ -13,26 +14,28 @@ import 'package:provider/provider.dart';
 class SelectRideSharePage extends StatefulWidget {
   final TripRouteResult _tripRouteResult;
   final List<RideShareItem> _rides;
+  final EstimateRidePrice _estimateRidePrice;
 
 
-  SelectRideSharePage(this._tripRouteResult, this._rides);
+  SelectRideSharePage(this._tripRouteResult, this._rides, this._estimateRidePrice);
+
 
   @override
   State<StatefulWidget> createState() =>
-      SelectRideSharePageState(_tripRouteResult, this._rides);
+      SelectRideSharePageState(_tripRouteResult, this._rides, this._estimateRidePrice);
 }
 
 class SelectRideSharePageState extends State<SelectRideSharePage> {
   Completer<GoogleMapController> _controller = Completer();
   final TripRouteResult _tripRouteResult;
+  final EstimateRidePrice _estimateRidePrice;
   int isExpandedItemIndex = -1;
   final Map<String, Marker> _markers = {};
   TripRouteBloc _tripRouteBloc;
   Polyline _polyline;
   static const LatLng _DEFAULT_POSITION = LatLng(39.50, -98.35);
   final List<RideShareItem> _rides;
-
-  SelectRideSharePageState(this._tripRouteResult, this._rides);
+  SelectRideSharePageState(this._tripRouteResult, this._rides, this._estimateRidePrice);
 
 
   @override
@@ -118,7 +121,8 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Text(_rides[index].rideShareType,style: TextStyle(color: Colors.white),),
-                              Text(_rides[index].rideShareCost,style: TextStyle(color: Colors.white),)
+                              Text(_rides[index].rideShareCost,style: TextStyle(color: Colors.white),),
+                              Text(_estimateRidePrice.estimateTripPrice().toString(),style: TextStyle(color: Colors.white),)
                             ],
                           ),
                           backgroundColor: Colors.pinkAccent,
