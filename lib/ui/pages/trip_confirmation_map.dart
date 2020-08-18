@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
 import 'package:gmoh_app/io/repository/trip_route_repo.dart';
 import 'package:gmoh_app/ui/blocs/trip_route_bloc.dart';
+import 'package:gmoh_app/ui/pages/ride_party_page.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -113,7 +114,15 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
           color: Colors.pinkAccent,
           textColor: Colors.white,
           elevation: 4,
-          onPressed: () { },
+          onPressed: () {
+            print("Trip map data ${widget.origin},${widget.destination}");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RidePartyPage(widget.origin, widget.destination),
+              ),
+            );
+          },
         ),
       ),
     );
