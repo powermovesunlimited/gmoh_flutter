@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gmoh_app/util/hex_color.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RidePartyPage extends StatelessWidget {
+
+  final LatLng origin;
+  final LatLng destination;
+
+  const RidePartyPage( this.origin, this.destination);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +65,7 @@ class RidePartyPage extends StatelessWidget {
                             child: RaisedButton(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
-                              child: Text('1 -4',
+                              child: Text('1 -3',
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontFamily: 'Montserrat',
@@ -81,7 +88,7 @@ class RidePartyPage extends StatelessWidget {
                             child: RaisedButton(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
-                              child: Text('5 +',
+                              child: Text('4 +',
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontFamily: 'Montserrat',
@@ -125,6 +132,7 @@ class RidePartyPage extends StatelessWidget {
                       elevation: 4,
                       onPressed: () {
                         //todo
+                        print("Ride map data $origin,$destination");
                       },
                     ),
                   ),
