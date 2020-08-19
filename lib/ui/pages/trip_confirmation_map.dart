@@ -115,7 +115,6 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
           textColor: Colors.white,
           elevation: 4,
           onPressed: () {
-            print("Trip map data ${widget.origin},${widget.destination}");
             Navigator.push(
               context,
               MaterialPageRoute(
