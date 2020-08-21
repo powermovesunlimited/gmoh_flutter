@@ -151,10 +151,7 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
                             ),
                             highlightColor: Colors.transparent,
                             color: Colors.transparent,
-                            onPressed: () {
-                              print(
-                                  "Trip map data ${widget.origin},${widget.destination}");
-                            }),
+                            onPressed: () {}),
                       )
                     ],
                   ),
