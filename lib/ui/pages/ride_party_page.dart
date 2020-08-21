@@ -99,7 +99,6 @@ class RidePartyPage extends StatelessWidget {
                               textColor: Colors.white,
                               elevation: 4,
                               onPressed: () {
-                                //todo
                               },
                             ),
                           ),
