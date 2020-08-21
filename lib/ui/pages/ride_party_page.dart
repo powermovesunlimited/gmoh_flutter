@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gmoh_app/ui/pages/select_your_rideshare_page.dart';
 import 'package:gmoh_app/util/hex_color.dart';
+import 'package:gmoh_app/util/rides_list.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RidePartyPage extends StatelessWidget {
@@ -131,8 +133,14 @@ class RidePartyPage extends StatelessWidget {
                       textColor: Colors.white,
                       elevation: 4,
                       onPressed: () {
-                        //todo
+                        final rideShareRides = RidesList().rides;
                         print("Ride map data $origin,$destination");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SelectRideSharePage(origin, destination, rideShareRides),
+                          ),
+                        );
                       },
                     ),
                   ),

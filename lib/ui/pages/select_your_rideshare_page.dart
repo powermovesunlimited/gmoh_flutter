@@ -11,35 +11,39 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class SelectRideSharePage extends StatefulWidget {
-  final TripRouteResult _tripRouteResult;
+  final LatLng origin;
+  final LatLng destination;
   final List<RideShareItem> _rides;
 
 
-  SelectRideSharePage(this._tripRouteResult, this._rides);
+
+  SelectRideSharePage(this.origin, this.destination, this._rides);
 
   @override
   State<StatefulWidget> createState() =>
-      SelectRideSharePageState(_tripRouteResult, this._rides);
+      SelectRideSharePageState(this.origin, this.destination, this._rides);
 }
 
 class SelectRideSharePageState extends State<SelectRideSharePage> {
   Completer<GoogleMapController> _controller = Completer();
-  final TripRouteResult _tripRouteResult;
   int isExpandedItemIndex = -1;
   final Map<String, Marker> _markers = {};
   TripRouteBloc _tripRouteBloc;
   Polyline _polyline;
   static const LatLng _DEFAULT_POSITION = LatLng(39.50, -98.35);
+  final LatLng origin;
+  final LatLng destination;
   final List<RideShareItem> _rides;
 
-  SelectRideSharePageState(this._tripRouteResult, this._rides);
+  SelectRideSharePageState(this.origin, this.destination, this._rides);
+
 
 
   @override
   Widget build(BuildContext context) {
     final remoteConfigHelper = Provider.of<RemoteConfigHelper>(context);
-    _goToStart(_tripRouteResult.origin);
-    _addMarkers(_tripRouteResult.origin);
+    _goToStart(origin);
+    _addMarkers(origin);
 //    final coordinates = _tripRouteResult.routePoints
 //        .map((point) => LatLng(point.latitude, point.longitude))
 //        .toList();
@@ -118,7 +122,6 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Text(_rides[index].rideShareType,style: TextStyle(color: Colors.white),),
-                              Text(_rides[index].rideShareCost,style: TextStyle(color: Colors.white),)
                             ],
                           ),
                           backgroundColor: Colors.pinkAccent,
@@ -132,7 +135,9 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
                               ),
                                   highlightColor: Colors.transparent,
                                   color: Colors.transparent,
-                                  onPressed: () {}
+                                  onPressed: () {
+                                    print("Trip map data ${widget.origin},${widget.destination}");
+                                  }
                               ),
                             )
                           ],
@@ -184,7 +189,7 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     final startMarker = createMapMarker(
         LatLng(initialPosition.latitude, initialPosition.longitude), "Start");
     final endMarker = createMapMarker(
-        LatLng(_tripRouteResult.destination.latitude, _tripRouteResult.destination.longitude),
+        destination,
         "Destination");
     _markers[startMarker.markerId.toString()] = startMarker;
     _markers[endMarker.markerId.toString()] = endMarker;
