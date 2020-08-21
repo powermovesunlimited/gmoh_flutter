@@ -233,11 +233,10 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     final destinationLog = widget.destination.longitude;
     final String lyftUrl =
         "lyft://ridetype?id=lyft&pickup[latitude]=$originLat&pickup[longitude]=$originLog&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog";
-    final url = lyftUrl;
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunch(lyftUrl)) {
+      await launch(lyftUrl);
     } else {
-      throw 'Could not launch $url';
+      throw 'Could not launch $lyftUrl';
     }
   }
 
@@ -246,13 +245,12 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     final originLog = widget.origin.longitude;
     final destinationLat = widget.destination.latitude;
     final destinationLog = widget.destination.longitude;
-    final String lyftUrl =
+    final String uberURL =
         "https://m.uber.com/ul/?action=setPickup&client_id=0B2F-5JcIUyerbTxlVVJWZ2PVW4F22QS&pickup=[latitude]=$originLat&pickup[longitude]=$originLog&dropoff[latitude]=$destinationLat&dropoff[longitude]=$destinationLog";
-    final url = lyftUrl;
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunch(uberURL)) {
+      await launch(uberURL);
     } else {
-      throw 'Could not launch $url';
+      throw 'Could not launch $uberURL';
     }
   }
 }
