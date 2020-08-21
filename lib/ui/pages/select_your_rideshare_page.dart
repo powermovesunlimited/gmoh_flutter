@@ -219,33 +219,20 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     );
   }
 
-  void rideshareLauncher(int buttonPosition){
-    if (buttonPosition == 0){
+  void rideshareLauncher(int buttonPosition) {
+    if (buttonPosition == 0) {
       _uberNavigator();
-    }else _lyftNavigator();
+    } else
+      _lyftNavigator();
   }
-
-
 
   void _lyftNavigator() async {
     final originLat = widget.origin.latitude;
     final originLog = widget.origin.longitude;
     final destinationLat = widget.destination.latitude;
     final destinationLog = widget.destination.longitude;
-    final String lyftUrl = "lyft://ridetype?id=lyft&pickup[latitude]=$originLat&pickup[longitude]=$originLog&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog";
-    final url = lyftUrl;
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-  void _uberNavigator() async {
-    final originLat = widget.origin.latitude;
-    final originLog = widget.origin.longitude;
-    final destinationLat = widget.destination.latitude;
-    final destinationLog = widget.destination.longitude;
-    final String lyftUrl = "https://m.uber.com/ul/?action=setPickup&client_id=0B2F-5JcIUyerbTxlVVJWZ2PVW4F22QS&pickup=[latitude]=$originLat&pickup[longitude]=$originLog&dropoff[latitude]=$destinationLat&dropoff[longitude]=$destinationLog";
+    final String lyftUrl =
+        "lyft://ridetype?id=lyft&pickup[latitude]=$originLat&pickup[longitude]=$originLog&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog";
     final url = lyftUrl;
     if (await canLaunch(url)) {
       await launch(url);
@@ -254,4 +241,18 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     }
   }
 
+  void _uberNavigator() async {
+    final originLat = widget.origin.latitude;
+    final originLog = widget.origin.longitude;
+    final destinationLat = widget.destination.latitude;
+    final destinationLog = widget.destination.longitude;
+    final String lyftUrl =
+        "https://m.uber.com/ul/?action=setPickup&client_id=0B2F-5JcIUyerbTxlVVJWZ2PVW4F22QS&pickup=[latitude]=$originLat&pickup[longitude]=$originLog&dropoff[latitude]=$destinationLat&dropoff[longitude]=$destinationLog";
+    final url = lyftUrl;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 }
