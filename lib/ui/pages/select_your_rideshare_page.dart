@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gmoh_app/io/apis/google_api_services.dart';
+import 'package:gmoh_app/io/repository/trip_route_repo.dart';
 import 'package:gmoh_app/ui/blocs/trip_route_bloc.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
@@ -14,8 +16,6 @@ class SelectRideSharePage extends StatefulWidget {
   final LatLng origin;
   final LatLng destination;
   final List<RideShareItem> _rides;
-
-
 
   SelectRideSharePage(this.origin, this.destination, this._rides);
 
@@ -37,24 +37,34 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
 
   SelectRideSharePageState(this.origin, this.destination, this._rides);
 
-
-
   @override
   Widget build(BuildContext context) {
     final remoteConfigHelper = Provider.of<RemoteConfigHelper>(context);
+    _tripRouteBloc = TripRouteBloc(
+        TripRouteRepository(GoogleApiService(remoteConfigHelper)));
     _goToStart(origin);
     _addMarkers(origin);
-//    final coordinates = _tripRouteResult.routePoints
-//        .map((point) => LatLng(point.latitude, point.longitude))
-//        .toList();
-//    _polyline = Polyline(
-//        polylineId: PolylineId("trip"),
-//        color: Colors.red,
-//        points: coordinates,
-//        width: 5
-//    );
-//    final initialPosition = _tripRouteResult.origin;
-    return buildTripConfirmationView(context, LatLng(39.50, -98.35));
+    return StreamBuilder(
+      stream: _tripRouteBloc.tripRouteObservable.stream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.data != null) {
+          TripRouteResult result = snapshot.data;
+          _goToStart(result.origin);
+          _addMarkers(result.origin);
+          final coordinates = result.routePoints
+              .map((point) => LatLng(point.latitude, point.longitude))
+              .toList();
+          _polyline = Polyline(
+              polylineId: PolylineId("trip"),
+              color: Colors.red,
+              points: coordinates,
+              width: 5);
+        } else {
+          _tripRouteBloc.fetchTripRoute(widget.destination, widget.origin);
+        }
+        return buildTripConfirmationView(context, _DEFAULT_POSITION);
+      },
+    );
   }
 
   Future<void> _goToStart(LatLng start) async {
@@ -90,64 +100,71 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
 
   _buildRideShareItem() {
     return Expanded(
-            child: Center(
-              child: ListView.builder(
-                shrinkWrap: true,
-                addAutomaticKeepAlives: false,
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                itemCount: _rides.length,
-                itemBuilder: (context, index){
-                  return Container(
-                    margin: EdgeInsets.only(
-                        top: 10.0, right: 20.0, left: 20.0, bottom: 0.0),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: HexColor("#078B91")
+      child: Center(
+        child: ListView.builder(
+          shrinkWrap: true,
+          addAutomaticKeepAlives: false,
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          itemCount: _rides.length,
+          itemBuilder: (context, index) {
+            return Container(
+              margin: EdgeInsets.only(
+                  top: 10.0, right: 20.0, left: 20.0, bottom: 0.0),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: HexColor("#078B91")),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: GestureDetector(
+                  child: ExpansionTile(
+                    key: GlobalKey(),
+                    initiallyExpanded: (index == isExpandedItemIndex),
+                    onExpansionChanged: ((isExpanded) {
+                      if (isExpanded) {
+                        setState(() {
+                          isExpandedItemIndex = index;
+                        });
+                      }
+                    }),
+                    leading: CircleAvatar(
+                      backgroundImage:
+                          AssetImage('${_rides[index].rideShereIcon}'),
                     ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: GestureDetector(
-                        child: ExpansionTile(
-                          key: GlobalKey(),
-                          initiallyExpanded: (index == isExpandedItemIndex),
-                          onExpansionChanged: ((isExpanded){
-                            if(isExpanded){
-                              setState(() {
-                                isExpandedItemIndex = index;
-                              });
-                            }
-                          }),
-                          leading: CircleAvatar(backgroundImage: AssetImage('${_rides[index].rideShereIcon}'),),
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(_rides[index].rideShareType,style: TextStyle(color: Colors.white),),
-                            ],
-                          ),
-                          backgroundColor: Colors.pinkAccent,
-                          children: [
-                            SizedBox(
-                              height: 50,
-                              width: double.infinity,
-                              child: FlatButton(child: Text("Confirm Ride",
-                                style: TextStyle(color: Colors.white
-                                ),
-                              ),
-                                  highlightColor: Colors.transparent,
-                                  color: Colors.transparent,
-                                  onPressed: () {
-                                    print("Trip map data ${widget.origin},${widget.destination}");
-                                  }
-                              ),
-                            )
-                          ],
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          _rides[index].rideShareType,
+                          style: TextStyle(color: Colors.white),
                         ),
-                      ),
+                      ],
                     ),
-                  );},
+                    backgroundColor: Colors.pinkAccent,
+                    children: [
+                      SizedBox(
+                        height: 50,
+                        width: double.infinity,
+                        child: FlatButton(
+                            child: Text(
+                              "Confirm Ride",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            highlightColor: Colors.transparent,
+                            color: Colors.transparent,
+                            onPressed: () {
+                              print(
+                                  "Trip map data ${widget.origin},${widget.destination}");
+                            }),
+                      )
+                    ],
+                  ),
+                ),
               ),
-            ),
-          );
+            );
+          },
+        ),
+      ),
+    );
   }
 
   Widget _buildGoogleMap(BuildContext context, LatLng initialPosition) {
@@ -175,7 +192,8 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
                 },
                 markers: _markers.values.toSet(),
                 myLocationEnabled: true,
-//                polylines: (_polyline != null) ? Set<Polyline>.of({_polyline}) : {},
+                polylines:
+                    (_polyline != null) ? Set<Polyline>.of({_polyline}) : {},
               ),
             ),
           ),
@@ -188,9 +206,7 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     _markers.clear();
     final startMarker = createMapMarker(
         LatLng(initialPosition.latitude, initialPosition.longitude), "Start");
-    final endMarker = createMapMarker(
-        destination,
-        "Destination");
+    final endMarker = createMapMarker(destination, "Destination");
     _markers[startMarker.markerId.toString()] = startMarker;
     _markers[endMarker.markerId.toString()] = endMarker;
   }
