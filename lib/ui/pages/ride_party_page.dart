@@ -4,12 +4,20 @@ import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/rides_list.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class RidePartyPage extends StatelessWidget {
+class RidePartyPage extends StatefulWidget {
 
   final LatLng origin;
   final LatLng destination;
 
-  const RidePartyPage( this.origin, this.destination);
+  RidePartyPage( this.origin, this.destination);
+
+  @override
+  _RidePartyPageState createState() => _RidePartyPageState();
+}
+
+class _RidePartyPageState extends State<RidePartyPage> {
+  int _riderCount = 0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +80,15 @@ class RidePartyPage extends StatelessWidget {
                                       fontSize: 20,
                                       fontFamily: 'Montserrat',
                                       fontWeight: FontWeight.w400)),
-                              color: Colors.pinkAccent,
+                              color: (_riderCount == 3)
+                                  ? HexColor("#de5d54")
+                                  : Colors.pinkAccent,
                               textColor: Colors.white,
                               elevation: 4,
                               onPressed: () {
-                                //todo
+                                setState(() {
+                                  _riderCount = 3;
+                                });
                               },
                             ),
                           ),
@@ -95,10 +107,15 @@ class RidePartyPage extends StatelessWidget {
                                       fontSize: 20,
                                       fontFamily: 'Montserrat',
                                       fontWeight: FontWeight.w400)),
-                              color: Colors.pinkAccent,
+                              color: (_riderCount > 3)
+                                  ? HexColor("#de5d54")
+                                  : Colors.pinkAccent,
                               textColor: Colors.white,
                               elevation: 4,
                               onPressed: () {
+                                setState(() {
+                                  _riderCount = 4;
+                                });
                               },
                             ),
                           ),
@@ -133,11 +150,11 @@ class RidePartyPage extends StatelessWidget {
                       elevation: 4,
                       onPressed: () {
                         final rideShareRides = RidesList().rides;
-                        print("Ride map data $origin,$destination");
+                        print("Ride map data ${widget.origin},${widget.destination}");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SelectRideSharePage(origin, destination, rideShareRides),
+                            builder: (context) => SelectRideSharePage(widget.origin, widget.destination, rideShareRides, _riderCount),
                           ),
                         );
                       },
