@@ -17,8 +17,9 @@ class SelectRideSharePage extends StatefulWidget {
   final LatLng origin;
   final LatLng destination;
   final List<RideShareItem> _rides;
+  final int riderCount;
 
-  SelectRideSharePage(this.origin, this.destination, this._rides);
+  SelectRideSharePage(this.origin, this.destination, this._rides, this.riderCount);
 
   @override
   State<StatefulWidget> createState() =>
@@ -231,8 +232,9 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     final originLog = widget.origin.longitude;
     final destinationLat = widget.destination.latitude;
     final destinationLog = widget.destination.longitude;
+    final String product = (widget.riderCount > 3)? "lyft_plus": "lyft";
     final String lyftUrl =
-        "lyft://ridetype?id=lyft&pickup[latitude]=$originLat&pickup[longitude]=$originLog&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog";
+        "lyft://ridetype?id=$product&pickup[latitude]=$originLat&pickup[longitude]=$originLog&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog";
     if (await canLaunch(lyftUrl)) {
       await launch(lyftUrl);
     } else {
