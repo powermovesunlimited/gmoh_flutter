@@ -232,9 +232,9 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     final originLog = widget.origin.longitude;
     final destinationLat = widget.destination.latitude;
     final destinationLog = widget.destination.longitude;
-    final String product = (widget.riderCount > 3)? "lyft_plus": "lyft";
+    final String productId = (widget.riderCount > 3)? "lyft_plus": "lyft";
     final String lyftUrl =
-        "lyft://ridetype?id=$product&pickup[latitude]=$originLat&pickup[longitude]=$originLog&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog";
+        "lyft://ridetype?id=$productId&pickup[latitude]=$originLat&pickup[longitude]=$originLog&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog";
     if (await canLaunch(lyftUrl)) {
       await launch(lyftUrl);
     } else {
