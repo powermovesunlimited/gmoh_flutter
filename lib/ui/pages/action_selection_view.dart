@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:app_settings/app_settings.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -14,13 +18,15 @@ import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
 import 'package:gmoh_app/ui/pages/trip_confirmation_map.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/permissions_helper.dart';
+import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ActionSelectionView extends StatefulWidget {
   final HomeLocationResult homeLocationResult;
+  final RemoteConfigHelper remoteConfigHelper;
 
-  ActionSelectionView(this.homeLocationResult);
+  ActionSelectionView(this.homeLocationResult, this.remoteConfigHelper);
 
   @override
   _ActionSelectionViewState createState() => _ActionSelectionViewState();
@@ -33,12 +39,25 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
   UserLocationsBloc _locationBloc;
   var hasRequestedLocationPermission = false;
   final permissionsHelper = new PermissionsHelper();
+  StreamSubscription<ConnectivityResult> _networkSubscription;
+  bool isInternetConnectivityAvailable;
 
   @override
   void initState() {
     super.initState();
     var locationDatabase = LocationDatabase();
     _locationBloc = UserLocationsBloc(LocationRepository(locationDatabase));
+    getNetworkConnectivity();
+  }
+
+  void getNetworkConnectivity() {
+    _networkSubscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.mobile || result == ConnectivityResult.wifi) {
+        isInternetConnectivityAvailable = true;
+      } else if (result == ConnectivityResult.none) {
+        isInternetConnectivityAvailable = false;
+      }
+    });
   }
 
   @override
@@ -109,7 +128,9 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
                 textColor: Colors.white,
                 elevation: 4,
                 onPressed: () async {
-                  attemptToRetrieveUserPosition(GoHome(), context);
+                  isInternetConnectivityAvailable
+                      ? attemptToRetrieveUserPosition(GoHome(), context)
+                      : showNoConnectivityDialog();
                 },
               ),
             ),
@@ -138,7 +159,10 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
                 textColor: Colors.white,
                 elevation: 4,
                 onPressed: () async {
-                  attemptToRetrieveUserPosition(GoSomewhereElse(), context);
+                  isInternetConnectivityAvailable
+                      ? attemptToRetrieveUserPosition(
+                          GoSomewhereElse(), context)
+                      : showNoConnectivityDialog();
                 },
               ),
             ),
@@ -146,6 +170,31 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
         ],
       ),
     );
+  }
+
+  void showNoConnectivityDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("No Internet Connection"),
+              content: Text("You are offline. \n"
+                  "Please enable Mobile Data or Wifi inorder to use this application"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('OK'),
+                  onPressed: () async {
+                    AppSettings.openDataRoamingSettings();
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ));
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    _networkSubscription.cancel();
   }
 
   @override
