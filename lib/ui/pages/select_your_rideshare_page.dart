@@ -102,6 +102,7 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
 
   _buildRideShareItem() {
     return Expanded(
+      flex: 3,
       child: Center(
         child: ListView.builder(
           shrinkWrap: true,
@@ -111,7 +112,7 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
           itemBuilder: (context, index) {
             return Container(
               margin: EdgeInsets.only(
-                  top: 10.0, right: 20.0, left: 20.0, bottom: 0.0),
+                  top: 5.0, right: 20.0, left: 20.0, bottom: 0.0),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: HexColor("#078B91")),
@@ -169,36 +170,30 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
   }
 
   Widget _buildGoogleMap(BuildContext context, LatLng initialPosition) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(0, 72, 0, 0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            height: 300,
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(100)),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: GoogleMap(
-                zoomGesturesEnabled: true,
-                mapType: MapType.normal,
-                initialCameraPosition: CameraPosition(
-                  target: initialPosition,
-                  zoom: 5,
-                ),
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
-                markers: _markers.values.toSet(),
-                myLocationEnabled: true,
-                polylines:
-                    (_polyline != null) ? Set<Polyline>.of({_polyline}) : {},
-              ),
+    return Expanded(
+      flex: 5,
+      child: Container(
+        height: MediaQuery.of(context).size.height / 1.5,
+        margin: EdgeInsets.fromLTRB(20, 100, 20, 0),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(100)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: GoogleMap(
+            zoomGesturesEnabled: true,
+            mapType: MapType.normal,
+            initialCameraPosition: CameraPosition(
+              target: initialPosition,
+              zoom: 5,
             ),
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+            markers: _markers.values.toSet(),
+            myLocationEnabled: true,
+            polylines:
+                (_polyline != null) ? Set<Polyline>.of({_polyline}) : {},
           ),
-        ],
+        ),
       ),
     );
   }
@@ -233,8 +228,9 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     final destinationLat = widget.destination.latitude;
     final destinationLog = widget.destination.longitude;
     final String productId = (widget.riderCount > 3)? "lyft_plus": "lyft";
+    final String clientId = "gzE1yek-6yTk";
     final String lyftUrl =
-        "lyft://ridetype?id=$productId&pickup[latitude]=$originLat&pickup[longitude]=$originLog&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog";
+        "https://lyft.com/ride?id=$productId&pickup[latitude]=$originLat&pickup[longitude]=$originLog&partner=$clientId&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog";
     if (await canLaunch(lyftUrl)) {
       await launch(lyftUrl);
     } else {
