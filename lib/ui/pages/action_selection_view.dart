@@ -271,8 +271,6 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
           context,
           MaterialPageRoute(
           builder: (context) => FindYourRideLoadingPage(),));
-    } else {
-//      remove loading animation
     }
   }
 
