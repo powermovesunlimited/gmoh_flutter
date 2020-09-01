@@ -6,6 +6,7 @@ import 'package:gmoh_app/io/repository/destinations_search_repo.dart';
 import 'package:gmoh_app/ui/blocs/destination_search_bloc.dart';
 import 'package:gmoh_app/ui/models/route_data.dart';
 import 'package:gmoh_app/ui/models/route_intent.dart';
+import 'package:gmoh_app/ui/pages/action_selection_page.dart';
 import 'package:gmoh_app/ui/pages/locator/alt_location_page.dart';
 import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
 import 'package:gmoh_app/ui/pages/trip_confirmation_map.dart';
@@ -48,99 +49,111 @@ class LocatorPageState extends State<LocatorPage> {
   }
 
   Widget buildContentView(DestinationSearchResult searchResult) {
-    return Material(
-      type: MaterialType.transparency,
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/background1300.png"),
-              fit: BoxFit.fill),
-        ),
-        child: SafeArea(
-          child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              title: const Text('Exit'),
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ActionSelectionPage(),));
+        return true;
+      },
+      child: Material(
+        type: MaterialType.transparency,
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/background1300.png"),
+                fit: BoxFit.fill),
+          ),
+          child: SafeArea(
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
               backgroundColor: Colors.transparent,
-              elevation: 0,
-            ),
-            body: Column(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(top: 24.0, right: 24.0, left: 24.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    gradient: LinearGradient(
-                        colors: [HexColor("#078B91"), HexColor("#336D6B")]),
-                  ),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 96,
-                    child: Center(
-                      child: Text(
-                        getAppBarTitle(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
+              appBar: AppBar(
+                title: const Text('Exit'),
+                backgroundColor: Colors.transparent,
+                leading: IconButton( icon: Icon(Icons.arrow_back),
+                    onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => ActionSelectionPage()));},
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.white,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(6))),
-                  margin:
-                  const EdgeInsets.only(top: 18.0, right: 24.0, left: 24.0),
-                  child: Container(
-                    transform: Matrix4.translationValues(-20.0, 0.0, 0.0),
-                    child: TextField(
-                      controller: _textController,
-                      textAlign: TextAlign.start,
-                      textAlignVertical: TextAlignVertical.center,
-                      textDirection: TextDirection.ltr,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        prefixIcon: Container(
-                          transform: Matrix4.translationValues(10.0, 0.0, 0.0),
-                          child: Icon(
-                            Icons.search,
-                            size: 24,
-                            color: HexColor("#078B91"),
-                          ),
+                elevation: 0,
+              ),
+              body: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(top: 24.0, right: 24.0, left: 24.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: LinearGradient(
+                          colors: [HexColor("#078B91"), HexColor("#336D6B")]),
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 96,
+                      child: Center(
+                        child: Text(
+                          getAppBarTitle(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400),
                         ),
-                        hintText: getHintText(),
-                        fillColor: Colors.white,
                       ),
-                      style: TextStyle(
-                        fontSize: 13.0,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w400,
-                      ),
-                      onChanged: (searchText) {
-                        onTextChangedListener.add(searchText);
-                      },
                     ),
                   ),
-                ),
-                Container(
-                    transform: Matrix4.translationValues(0.0, -8.0, 0.0),
-                    child: searchResult != null
-                        ? buildSuggestionList(searchResult)
-                        : Container()),
-                setupContinueButton(searchResult),
-              ],
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.white,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(6))),
+                    margin:
+                    const EdgeInsets.only(top: 18.0, right: 24.0, left: 24.0),
+                    child: Container(
+                      transform: Matrix4.translationValues(-20.0, 0.0, 0.0),
+                      child: TextField(
+                        controller: _textController,
+                        textAlign: TextAlign.start,
+                        textAlignVertical: TextAlignVertical.center,
+                        textDirection: TextDirection.ltr,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          prefixIcon: Container(
+                            transform: Matrix4.translationValues(10.0, 0.0, 0.0),
+                            child: Icon(
+                              Icons.search,
+                              size: 24,
+                              color: HexColor("#078B91"),
+                            ),
+                          ),
+                          hintText: getHintText(),
+                          fillColor: Colors.white,
+                        ),
+                        style: TextStyle(
+                          fontSize: 13.0,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w400,
+                        ),
+                        onChanged: (searchText) {
+                          onTextChangedListener.add(searchText);
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                      transform: Matrix4.translationValues(0.0, -8.0, 0.0),
+                      child: searchResult != null
+                          ? buildSuggestionList(searchResult)
+                          : Container()),
+                  setupContinueButton(searchResult),
+                ],
+              ),
             ),
           ),
         ),

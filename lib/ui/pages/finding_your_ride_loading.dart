@@ -37,7 +37,7 @@ class FindYourRideLoadingPage extends StatelessWidget {
                         child: SizedBox(
                           child: Column(
                             children: [
-                              Text('Finding your ride...',
+                              Text('Loading...',
                                 style: TextStyle(color: Colors.white,
                                     fontSize: 18,
                                     fontFamily: 'Montserrat',
