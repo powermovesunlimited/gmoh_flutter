@@ -7,6 +7,7 @@ import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
 import 'package:gmoh_app/ui/models/route_data.dart';
 import 'package:gmoh_app/ui/models/route_intent.dart';
+import 'package:gmoh_app/ui/pages/finding_your_ride_loading.dart';
 import 'package:gmoh_app/ui/pages/locator/alt_location_page.dart';
 import 'package:gmoh_app/ui/pages/locator/current_user_location.dart';
 import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
@@ -162,17 +163,12 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
 
   void attemptToRetrieveUserPosition(RouteIntent intent, BuildContext context) async {
     var locationPermissionGranted =
-        await permissionsHelper.isLocationPermissionGranted();
+    await permissionsHelper.isLocationPermissionGranted();
 
     if (!locationPermissionGranted && !hasRequestedLocationPermission) {
       requestLocationPermission(intent,context);
       return;
     } else if (locationPermissionGranted) {
-      Position position = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      setState(() {
-        userPosition = position;
-      });
       useGPSLocationThenNavigateToNextPage(intent);
     }
   }
@@ -225,8 +221,16 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
   }
 
   Future useGPSLocationThenNavigateToNextPage(RouteIntent intent) async {
+
+//    start loading animation
+    launchLoadingAnimation(userPosition);
+
     Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    // cancel loading animation
+    setState(() {
+      userPosition = position;
+    });
     RouteData route = RouteData();
     route.origin = LatLng(position.latitude, position.longitude);
 
@@ -257,13 +261,25 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
           ));
     }
   }
+  bool _progressBarActive = true;
+
+
+  Future launchLoadingAnimation (Position position)async{
+    if(position == null){
+//      Show loading animation
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+          builder: (context) => FindYourRideLoadingPage(),));
+    }
+  }
 
   Future findUserLocationThenNavigateToNextPage(RouteIntent intent, BuildContext context) async {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CurrentUserLocationPage(RouteData(), intent),
-        ),
-      );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CurrentUserLocationPage(RouteData(), intent),
+      ),
+    );
   }
 }
