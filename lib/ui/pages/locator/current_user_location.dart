@@ -31,4 +31,8 @@ class _CurrentUserLocationState extends LocatorPageState {
   String getContinueButtonText() {
     return "Set as Current Location";
   }
+
+  @override
+  onAddressSelected(String address, LatLng location) {
+  }
 }
