@@ -18,8 +18,7 @@ class TripConfirmationMap extends StatefulWidget {
   TripConfirmationMap(this.origin, this.destination);
 
   @override
-  State<StatefulWidget> createState() =>
-      TripConfirmationMapState();
+  State<StatefulWidget> createState() => TripConfirmationMapState();
 }
 
 class TripConfirmationMapState extends State<TripConfirmationMap> {
@@ -52,7 +51,7 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
               points: coordinates,
               width: 5);
         } else {
-          _tripRouteBloc.fetchTripRoute(widget.destination, widget.origin );
+          _tripRouteBloc.fetchTripRoute(widget.destination, widget.origin);
         }
         return buildTripConfirmationView(context, _DEFAULT_POSITION);
       },
@@ -84,26 +83,36 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
                 image: AssetImage("assets/images/background1300.png"),
                 fit: BoxFit.fill),
           ),
-          child: Container(
-              child: Stack(
-            children: <Widget>[
-              AppBar(
+          child: SafeArea(
+              child: Scaffold(
+                resizeToAvoidBottomInset: false,
                 backgroundColor: Colors.transparent,
-                leading: IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ActionSelectionPage()));
-                  },
+                  appBar: AppBar(
+                    title: const Text('Exit'),
+                    backgroundColor: Colors.transparent,
+                    leading: IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () {
+                       Navigator.push(
+                          context,
+                           MaterialPageRoute(
+                          builder: (context) => ActionSelectionPage()));
+                      },
+                  ),
+                  elevation: 0,
                 ),
-              ),
-              setupPageTitleCard(),
-              setupTripMap(initialPosition),
-              setupEditButton(),
-              setupContinueButton()
-            ],
+                 body: Column(
+                    children: <Widget>[
+                      setupPageTitleCard(),
+                      setupTripMap(initialPosition),
+                      Stack(
+                        children: [
+                          setupEditButton(),
+                          setupContinueButton()
+                        ],
+                      ),
+              ],
+            ),
           )),
         ),
       ),
@@ -112,7 +121,7 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
 
   Container setupContinueButton() {
     return Container(
-      margin: EdgeInsets.only(top: 630.0, right: 24.0, left: 220.0),
+      margin: EdgeInsets.only(top: 8.0, right: 24.0, left: 210.0, bottom: 18.0),
       child: SizedBox(
         width: double.infinity,
         height: 40,
@@ -138,7 +147,8 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => RidePartyPage(widget.origin, widget.destination),
+                builder: (context) =>
+                    RidePartyPage(widget.origin, widget.destination),
               ),
             );
           },
@@ -149,7 +159,7 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
 
   Container setupEditButton() {
     return Container(
-        margin: const EdgeInsets.only(top: 630.0, right: 220.0, left: 24.0),
+        margin: const EdgeInsets.only(top: 8.0, right: 210.0, left: 24.0, bottom: 18.0),
         child: SizedBox(
           width: double.infinity,
           height: 40,
@@ -178,15 +188,15 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
         ));
   }
 
-  Container setupTripMap(LatLng initialPosition) {
-    return Container(
-        margin: const EdgeInsets.only(top: 214.0, right: 24.0, left: 24.0),
-        height: 400,
-        width: 440,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4), color: Colors.white),
-        child: Padding(
-          padding: const EdgeInsets.all(2.0),
+  Expanded setupTripMap(LatLng initialPosition) {
+    return Expanded(
+      flex: 5,
+      child: Container(
+        height: MediaQuery.of(context).size.height / 1.5,
+        margin: EdgeInsets.fromLTRB(24, 12, 24, 8),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(100)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
           child: GoogleMap(
             zoomGesturesEnabled: true,
             mapType: MapType.normal,
@@ -201,14 +211,15 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
             myLocationEnabled: true,
             polylines: (_polyline != null) ? Set<Polyline>.of({_polyline}) : {},
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Container setupPageTitleCard() {
     return Container(
-      margin: EdgeInsets.only(top: 36.0),
       child: Container(
-        margin: EdgeInsets.only(top: 64.0, right: 24.0, left: 24.0),
+        margin: EdgeInsets.only(top: 24.0, right: 24.0, left: 24.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           gradient: LinearGradient(
@@ -216,13 +227,13 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
         ),
         child: SizedBox(
           width: double.infinity,
-          height: 88,
+          height: 96,
           child: Center(
             child: Text(
               "Your Trip Map",
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 22,
                   fontFamily: 'Montserrat',
                   fontWeight: FontWeight.w400),
             ),
