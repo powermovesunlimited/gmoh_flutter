@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gmoh_app/io/database/location_database.dart';
 import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/drawer_bloc.dart';
-import 'package:gmoh_app/ui/models/locator_page_model.dart';
+import 'package:gmoh_app/ui/models/route_data.dart';
+import 'package:gmoh_app/ui/models/route_intent.dart';
+import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 
 class HomeMenuDrawer extends StatefulWidget {
@@ -17,6 +19,8 @@ class HomeMenuDrawer extends StatefulWidget {
 class _HomeMenuDrawerState extends State<HomeMenuDrawer>
     with WidgetsBindingObserver {
   DrawerBloc _drawerBloc;
+
+  RouteIntent get intent => null;
 
 
   @override
@@ -129,8 +133,14 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer>
                             color: Colors.pinkAccent,
                             textColor: Colors.white,
                             onPressed: () {
-                              Navigator.pushNamed(context,
-                                  'home_locator_page/${getStringFromEnum(HomeLocationPageMode.HOME_LOCATION)}');
+                              RouteData route = RouteData();
+                              HomeLocatorPage homeLocatorPage = HomeLocatorPage(route, intent);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => homeLocatorPage,
+                                ),
+                              );
                             },
                           ),
                         ),

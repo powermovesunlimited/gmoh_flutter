@@ -1,6 +1,7 @@
 import 'package:gmoh_app/ui/models/route_data.dart';
 import 'package:gmoh_app/ui/models/route_intent.dart';
 import 'package:gmoh_app/ui/pages/locator/locator_page.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AlternateLocationPage extends LocatorPage {
   static const String routeName = "/altLocationPage";
@@ -34,5 +35,9 @@ class AlternateLocationState extends LocatorPageState {
   @override
   String getContinueButtonText() {
     return "Set Address and Go";
+  }
+
+  @override
+  onAddressSelected(String address, LatLng location) {
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
 import 'package:gmoh_app/io/repository/destinations_search_repo.dart';
@@ -13,7 +12,6 @@ import 'package:gmoh_app/ui/pages/trip_confirmation_map.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -26,14 +24,12 @@ abstract class LocatorPage extends StatefulWidget {
   LocatorPageState createState();
 }
 
-class LocatorPageState extends State<LocatorPage> {
+abstract class LocatorPageState extends State<LocatorPage> {
   Position userPosition;
 
   LocatorPageState(this.routeData);
 
   DestinationSearchBloc _bloc;
-
-  var _addressEntered = Set();
 
   final onTextChangedListener = new PublishSubject<String>();
 
@@ -54,7 +50,8 @@ class LocatorPageState extends State<LocatorPage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ActionSelectionPage(),));
+              builder: (context) => ActionSelectionPage(),
+            ));
         return true;
       },
       child: Material(
@@ -72,8 +69,14 @@ class LocatorPageState extends State<LocatorPage> {
               appBar: AppBar(
                 title: const Text('Exit'),
                 backgroundColor: Colors.transparent,
-                leading: IconButton( icon: Icon(Icons.arrow_back),
-                    onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => ActionSelectionPage()));},
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ActionSelectionPage()));
+                  },
                 ),
                 elevation: 0,
               ),
@@ -109,8 +112,8 @@ class LocatorPageState extends State<LocatorPage> {
                           color: Colors.white,
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(6))),
-                    margin:
-                    const EdgeInsets.only(top: 18.0, right: 24.0, left: 24.0),
+                    margin: const EdgeInsets.only(
+                        top: 18.0, right: 24.0, left: 24.0),
                     child: Container(
                       transform: Matrix4.translationValues(-20.0, 0.0, 0.0),
                       child: TextField(
@@ -125,7 +128,8 @@ class LocatorPageState extends State<LocatorPage> {
                           errorBorder: InputBorder.none,
                           disabledBorder: InputBorder.none,
                           prefixIcon: Container(
-                            transform: Matrix4.translationValues(10.0, 0.0, 0.0),
+                            transform:
+                                Matrix4.translationValues(10.0, 0.0, 0.0),
                             child: Icon(
                               Icons.search,
                               size: 24,
@@ -228,14 +232,14 @@ class LocatorPageState extends State<LocatorPage> {
                 final latitude = placeDetails.geometry.location.lat;
                 final longitude = placeDetails.geometry.location.lng;
                 final address = placeDetails.formattedAddress;
-                _addressEntered.add(address);
-                _addressEntered.add(latitude);
-                _addressEntered.add(longitude);
+
                 FocusScope.of(context).unfocus();
                 setState(() {
-                  routeData.destination = LatLng(latitude, longitude);
+                  var latLng = LatLng(latitude, longitude);
+                  routeData.destination = latLng;
                   _textController.text = placeDetails.formattedAddress;
                   searchResult.results.clear();
+                  onAddressSelected(address, latLng);
                 });
               },
             ),
@@ -328,4 +332,6 @@ class LocatorPageState extends State<LocatorPage> {
       }
     }
   }
+
+  onAddressSelected(String address, LatLng latLng);
 }

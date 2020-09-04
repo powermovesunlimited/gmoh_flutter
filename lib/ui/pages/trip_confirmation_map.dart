@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
 import 'package:gmoh_app/io/repository/trip_route_repo.dart';
 import 'package:gmoh_app/ui/blocs/trip_route_bloc.dart';
+import 'package:gmoh_app/ui/pages/action_selection_page.dart';
 import 'package:gmoh_app/ui/pages/ride_party_page.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
@@ -66,26 +67,45 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
 
   Widget buildTripConfirmationView(
       BuildContext context, LatLng initialPosition) {
-    return Material(
-      type: MaterialType.transparency,
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/background1300.png"),
-              fit: BoxFit.fill),
-        ),
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ActionSelectionPage(),
+            ));
+        return true;
+      },
+      child: Material(
+        type: MaterialType.transparency,
         child: Container(
-            child: Stack(
-          children: <Widget>[
-            AppBar(
-              backgroundColor: Colors.transparent,
-            ),
-            setupPageTitleCard(),
-            setupTripMap(initialPosition),
-            setupEditButton(),
-            setupContinueButton()
-          ],
-        )),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/background1300.png"),
+                fit: BoxFit.fill),
+          ),
+          child: Container(
+              child: Stack(
+            children: <Widget>[
+              AppBar(
+                backgroundColor: Colors.transparent,
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ActionSelectionPage()));
+                  },
+                ),
+              ),
+              setupPageTitleCard(),
+              setupTripMap(initialPosition),
+              setupEditButton(),
+              setupContinueButton()
+            ],
+          )),
+        ),
       ),
     );
   }
