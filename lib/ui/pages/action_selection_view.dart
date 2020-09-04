@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,17 +15,17 @@ import 'package:gmoh_app/ui/pages/locator/alt_location_page.dart';
 import 'package:gmoh_app/ui/pages/locator/current_user_location.dart';
 import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
 import 'package:gmoh_app/ui/pages/trip_confirmation_map.dart';
+import 'package:gmoh_app/util/connectivity_status.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/permissions_helper.dart';
-import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class ActionSelectionView extends StatefulWidget {
   final HomeLocationResult homeLocationResult;
-  final RemoteConfigHelper remoteConfigHelper;
 
-  ActionSelectionView(this.homeLocationResult, this.remoteConfigHelper);
+  ActionSelectionView(this.homeLocationResult);
 
   @override
   _ActionSelectionViewState createState() => _ActionSelectionViewState();
@@ -39,7 +38,6 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
   UserLocationsBloc _locationBloc;
   var hasRequestedLocationPermission = false;
   final permissionsHelper = new PermissionsHelper();
-  StreamSubscription<ConnectivityResult> _networkSubscription;
   bool isInternetConnectivityAvailable;
 
   @override
@@ -47,21 +45,21 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
     super.initState();
     var locationDatabase = LocationDatabase();
     _locationBloc = UserLocationsBloc(LocationRepository(locationDatabase));
-    getNetworkConnectivity();
   }
 
   void getNetworkConnectivity() {
-    _networkSubscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.mobile || result == ConnectivityResult.wifi) {
-        isInternetConnectivityAvailable = true;
-      } else if (result == ConnectivityResult.none) {
-        isInternetConnectivityAvailable = false;
-      }
-    });
+    final connectionStatus = Provider.of<ConnectivityStatus>(context);
+    if (connectionStatus == ConnectivityStatus.Cellular ||
+        connectionStatus == ConnectivityStatus.WiFi) {
+      isInternetConnectivityAvailable = true;
+    } else {
+      isInternetConnectivityAvailable = false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    getNetworkConnectivity();
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -194,7 +192,6 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
   @override
   dispose() {
     super.dispose();
-    _networkSubscription.cancel();
   }
 
   @override
