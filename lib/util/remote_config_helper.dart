@@ -6,6 +6,8 @@ class RemoteConfigHelper {
 
   final RemoteConfig _remoteConfig;
 
+  static bool isGoogleKeyRetrieved;
+
   static RemoteConfigHelper _instance;
 
   RemoteConfigHelper({RemoteConfig remoteConfig})
@@ -28,9 +30,19 @@ class RemoteConfigHelper {
     await remoteConfig.setDefaults(<String, dynamic>{
       'google_api_key': 'test_key_dummy',
     });
+    try {
+      await updateRemoteConfig(remoteConfig);
+      isGoogleKeyRetrieved = true;
+    } catch (e) {
+      print("Error in Remote Config $e");
+      isGoogleKeyRetrieved = false;
+    }
+    return remoteConfig;
+  }
+
+  static Future updateRemoteConfig(RemoteConfig remoteConfig) async {
     await remoteConfig.fetch();
     await remoteConfig.activateFetched();
-    return remoteConfig;
   }
 
   String get googleApiKey => _remoteConfig.getString(_GOOGLE_API_KEY);

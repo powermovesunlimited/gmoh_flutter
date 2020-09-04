@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:app_settings/app_settings.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:gmoh_app/io/database/location_database.dart';
 import 'package:gmoh_app/io/repository/location_repo.dart';
@@ -5,10 +9,12 @@ import 'package:gmoh_app/ui/blocs/drawer_bloc.dart';
 import 'package:gmoh_app/ui/models/route_data.dart';
 import 'package:gmoh_app/ui/models/route_intent.dart';
 import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
+import 'package:gmoh_app/util/connectivity_status.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 
 class HomeMenuDrawer extends StatefulWidget {
-  const HomeMenuDrawer({
+  final ConnectivityStatus _connectivityStatus;
+  const HomeMenuDrawer(this._connectivityStatus, {
     Key key,
   }) : super(key: key);
 
@@ -19,6 +25,7 @@ class HomeMenuDrawer extends StatefulWidget {
 class _HomeMenuDrawerState extends State<HomeMenuDrawer>
     with WidgetsBindingObserver {
   DrawerBloc _drawerBloc;
+  bool isInternetConnectivityAvailable;
 
   RouteIntent get intent => null;
 
@@ -30,6 +37,25 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer>
     _drawerBloc = DrawerBloc(LocationRepository(locationDatabase));
     _drawerBloc.getHomeLocation();
     WidgetsBinding.instance.addObserver(this);
+  }
+
+  void showNoConnectivityDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("No Internet Connection"),
+          content: Text("You are offline. \n"
+              "Please enable Mobile Data or Wifi inorder to use this application"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () async {
+                AppSettings.openDataRoamingSettings();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ));
   }
 
   @override
@@ -75,7 +101,7 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer>
                       Container(
                         alignment: Alignment(.9, .6),
                         child: Text(
-                          "Im a Rida",
+                          "Rider Name",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -133,14 +159,7 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer>
                             color: Colors.pinkAccent,
                             textColor: Colors.white,
                             onPressed: () {
-                              RouteData route = RouteData();
-                              HomeLocatorPage homeLocatorPage = HomeLocatorPage(route, intent);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => homeLocatorPage,
-                                ),
-                              );
+                              handleEditAddressClick(context);
                             },
                           ),
                         ),
@@ -195,7 +214,7 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer>
                     ),
                   ),
 //
-//   Use the commented code below when you need to manually navate to a different page just update the navitagator and Text
+//   Use the commented code below when you need to manually navigate to a different page just update the navigator and Text
 //
 //                  ListTile(
 //                    title: Container(
@@ -231,5 +250,29 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer>
             ),
           );
         });
+  }
+
+  void handleEditAddressClick(BuildContext context) async {
+    final connectivityResult = widget._connectivityStatus;
+    if (connectivityResult == ConnectivityStatus.Cellular ||
+        connectivityResult == ConnectivityStatus.WiFi) {
+      isInternetConnectivityAvailable = true;
+    } else {
+      isInternetConnectivityAvailable = false;
+    }
+    RouteData route = RouteData();
+    isInternetConnectivityAvailable?
+    launchHomeLocatorPage(context, route) : showNoConnectivityDialog();
+  }
+
+  Future launchHomeLocatorPage(BuildContext context, RouteData route) {
+    return Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeLocatorPage(
+            route,
+            GoHomePage(),
+          ),
+        ));
   }
 }

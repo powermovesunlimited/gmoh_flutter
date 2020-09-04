@@ -7,6 +7,8 @@ import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
 import 'package:gmoh_app/ui/pages/action_selection_view.dart';
 import 'package:gmoh_app/ui/pages/home_menu_drawer.dart';
+import 'package:gmoh_app/util/connectivity_status.dart';
+import 'package:provider/provider.dart';
 
 class ActionSelectionPage extends StatefulWidget {
   @override
@@ -33,13 +35,14 @@ class _ActionSelectionPageState extends State<ActionSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      drawer: HomeMenuDrawer(),
+      drawer: HomeMenuDrawer(connectionStatus),
       body: StreamBuilder(
         stream: _locationBloc.getLocationDataObservable(),
         builder: (BuildContext context, AsyncSnapshot<Location> snapshot) {

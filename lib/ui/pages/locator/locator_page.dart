@@ -313,7 +313,7 @@ abstract class LocatorPageState extends State<LocatorPage> {
               builder: (context) => HomeLocatorPage(routeData, intent),
             ));
       }
-    } else {
+    } else if (intent is GoSomewhereElse){
       if (routeData.destination != null) {
         // go to map
         Navigator.push(
@@ -329,6 +329,16 @@ abstract class LocatorPageState extends State<LocatorPage> {
             MaterialPageRoute(
               builder: (context) => AlternateLocationPage(routeData, intent),
             ));
+      }
+    } else if (intent is GoHomePage) {
+      if (routeData.destination != null) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  ActionSelectionPage(),
+            ));
+
       }
     }
   }
