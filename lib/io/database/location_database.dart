@@ -45,8 +45,8 @@ class LocationDatabase {
 
     return res.isNotEmpty
         ? res
-            .map((entry) => Location(entry["id"], entry["address"], entry["longitude"],
-                entry["latitude"], entry["type"]))
+            .map((entry) => Location(entry["id"], entry["address"], entry["latitude"],
+                entry["longitude"], entry["type"]))
             .toList()
         : [];
   }
@@ -57,8 +57,8 @@ class LocationDatabase {
         await dbClient.query('Locations', where: 'type = ?', whereArgs: [type]);
 
     return queryResponse.isNotEmpty
-        ? Location(queryResponse.first["id"], queryResponse.first["address"], queryResponse.first["longitude"],
-            queryResponse.first["latitude"], getLocationTypeFromString(queryResponse.first["type"]))
+        ? Location(queryResponse.first["id"], queryResponse.first["address"], queryResponse.first["latitude"],
+            queryResponse.first["longitude"], getLocationTypeFromString(queryResponse.first["type"]))
         : null;
   }
 

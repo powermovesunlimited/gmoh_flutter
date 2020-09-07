@@ -4,10 +4,7 @@ import 'package:app_settings/app_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:gmoh_app/io/database/location_database.dart';
 import 'package:gmoh_app/io/models/home_location_result.dart';
-import 'package:gmoh_app/io/repository/location_repo.dart';
-import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
 import 'package:gmoh_app/ui/models/route_data.dart';
 import 'package:gmoh_app/ui/models/route_intent.dart';
 import 'package:gmoh_app/ui/pages/finding_your_ride_loading.dart';
@@ -35,7 +32,6 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
     implements PermissionDialogListener {
   Position userPosition;
   LatLng startLocation;
-  UserLocationsBloc _locationBloc;
   var hasRequestedLocationPermission = false;
   final permissionsHelper = new PermissionsHelper();
   bool isInternetConnectivityAvailable;
@@ -43,8 +39,6 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
   @override
   void initState() {
     super.initState();
-    var locationDatabase = LocationDatabase();
-    _locationBloc = UserLocationsBloc(LocationRepository(locationDatabase));
   }
 
   void getNetworkConnectivity() {
@@ -307,8 +301,6 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
           ));
     }
   }
-  bool _progressBarActive = true;
-
 
   Future launchLoadingAnimation (Position position)async{
     if(position == null){
