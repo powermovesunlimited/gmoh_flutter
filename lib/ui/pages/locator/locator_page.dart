@@ -297,6 +297,8 @@ abstract class LocatorPageState extends State<LocatorPage> {
 
   void navigateToNextPage() {
     final intent = widget.routeIntent;
+    print("this is the locator page intent $intent");
+
     if (intent is GoHome) {
       if (routeData.origin != null && routeData.destination != null) {
         //go to map
@@ -304,14 +306,14 @@ abstract class LocatorPageState extends State<LocatorPage> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  TripConfirmationMap(routeData.origin, routeData.destination, GoBackToHomeLocatorPage()),
+                  TripConfirmationMap(routeData.origin, routeData.destination, intent),
             ));
       } else if (routeData.destination == null) {
         //go to get home location
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => HomeLocatorPage(routeData, intent),
+              builder: (context) => HomeLocatorPage(routeData, GoBackToHomeLocatorPage()),
             ));
       }
     } else if (intent is GoSomewhereElse){
@@ -341,6 +343,13 @@ abstract class LocatorPageState extends State<LocatorPage> {
             ));
 
       }
+    } else if (intent is GoBackToHomeLocatorPage){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                TripConfirmationMap(routeData.origin, routeData.destination, GoBackToHomeLocatorPage()),
+          ));
     }
   }
 

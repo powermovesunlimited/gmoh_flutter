@@ -38,7 +38,6 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
   final Map<String, Marker> _markers = {};
   TripRouteBloc _tripRouteBloc;
   Polyline _polyline;
-  RouteData route = new RouteData();
   Position userPosition;
   var hasRequestedLocationPermission = false;
   final permissionsHelper = new PermissionsHelper();
@@ -284,151 +283,24 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
   }
 
   Future editDestination() async {
-    RouteData route = RouteData();
-    final intent = widget.intent;
+    RouteData routeData = RouteData();
 
-    route.origin = LatLng(widget.origin.latitude, widget.origin.longitude);
-    route.destination = LatLng(widget.origin.latitude, widget.origin.longitude);
+    routeData.origin = LatLng(widget.origin.latitude, widget.origin.longitude);
+    routeData.destination = LatLng(widget.origin.latitude, widget.origin.longitude);
 
-//    if (intent is !GoHome){
-//      attemptToRetrieveUserPosition(GoSomewhereElse(), context);
-//    }else {
-//      attemptToRetrieveUserPosition(GoHome(), context);
-//    }
-
-    attemptToRetrieveUserPosition(GoHome(), context);
-
-
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    // cancel loading animation
-    setState(() {
-      userPosition = position;
-    });
-
-    route.origin = LatLng(position.latitude, position.longitude);
-
-
-    if (widget.intent is GoBackToHomeLocatorPage) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => HomeLocatorPage(route, intent),
-          ), ModalRoute.withName('/homeLocatorPage'));
-    } else {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => AlternateLocationPage(route, intent),
-          ), ModalRoute.withName('/altLocationPage'));
-    }
-  }
-
-  void attemptToRetrieveUserPosition(RouteIntent intent,
-      BuildContext context) async {
-    var locationPermissionGranted =
-    await permissionsHelper.isLocationPermissionGranted();
-
-    if (!locationPermissionGranted && !hasRequestedLocationPermission) {
-      requestLocationPermission(intent, context);
-      return;
-    } else if (locationPermissionGranted) {
-      useGPSLocationThenNavigateToNextPage(intent);
-    }
-  }
-
-  void requestLocationPermission(RouteIntent intent,
-      BuildContext context) async {
-    switch (await permissionsHelper.requestLocationPermission()) {
-      case PermissionStatus.denied:
-        {
-          setState(() {
-            hasRequestedLocationPermission = false;
-          });
-          permissionsHelper.onLocationPermissionDenied(context).then((value) =>
-              findUserLocationThenNavigateToNextPage(intent, context));
-        }
-        break;
-      case PermissionStatus.permanentlyDenied:
-        {
-          setState(() {
-            hasRequestedLocationPermission = false;
-          });
-          permissionsHelper.onLocationPermissionPermanentlyDenied(context);
-        }
-        break;
-      case PermissionStatus.granted:
-        {
-          setState(() {
-            hasRequestedLocationPermission = true;
-          });
-          useGPSLocationThenNavigateToNextPage(intent);
-        }
-        break;
-      case PermissionStatus.restricted:
-        {
-          setState(() {
-            hasRequestedLocationPermission = false;
-          });
-          permissionsHelper.onLocationPermissionDenied(context).then((value) =>
-              findUserLocationThenNavigateToNextPage(intent, context));
-        }
-        break;
-      case PermissionStatus.undetermined:
-        {
-          setState(() {
-            hasRequestedLocationPermission = false;
-          });
-          permissionsHelper.onLocationPermissionDenied(context).then((value) =>
-              findUserLocationThenNavigateToNextPage(intent, context));
-        }
-    }
-  }
-
-  Future useGPSLocationThenNavigateToNextPage(RouteIntent intent) async {
-//    start loading animation
-    launchLoadingAnimation(userPosition);
-
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    // cancel loading animation
-    setState(() {
-      userPosition = position;
-    });
-    RouteData route = RouteData();
-    route.origin = LatLng(position.latitude, position.longitude);
-
-    if (intent is GoBackToHomeLocatorPage) {
+    print("trip map intent is ${widget.intent}");
+    if (widget.intent is GoHome) {
       Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomeLocatorPage(route, intent),
-        ),
-      );
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeLocatorPage(routeData, widget.intent),
+          ));
     } else {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AlternateLocationPage(route, intent),
+            builder: (context) => AlternateLocationPage(routeData, widget.intent),
           ));
     }
-  }
-
-  Future launchLoadingAnimation(Position position) async {
-    if (position == null) {
-//      Show loading animation
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => FindYourRideLoadingPage(),));
-    }
-  }
-
-  Future findUserLocationThenNavigateToNextPage(RouteIntent intent,
-      BuildContext context) async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CurrentUserLocationPage(RouteData(), intent),
-      ),
-    );
   }
 }
