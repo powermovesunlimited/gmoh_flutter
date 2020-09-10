@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
+import 'package:gmoh_app/io/models/home_location_result.dart';
 import 'package:gmoh_app/io/repository/destinations_search_repo.dart';
 import 'package:gmoh_app/ui/blocs/destination_search_bloc.dart';
 import 'package:gmoh_app/ui/models/route_data.dart';
@@ -296,6 +297,8 @@ abstract class LocatorPageState extends State<LocatorPage> {
 
   void navigateToNextPage() {
     final intent = widget.routeIntent;
+    print("this is the locator page intent $intent");
+
     if (intent is GoHome) {
       if (routeData.origin != null && routeData.destination != null) {
         //go to map
@@ -303,14 +306,14 @@ abstract class LocatorPageState extends State<LocatorPage> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  TripConfirmationMap(routeData.origin, routeData.destination),
+                  TripConfirmationMap(routeData.origin, routeData.destination, intent),
             ));
       } else if (routeData.destination == null) {
         //go to get home location
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => HomeLocatorPage(routeData, intent),
+              builder: (context) => HomeLocatorPage(routeData, GoBackToHomeLocatorPage()),
             ));
       }
     } else if (intent is GoSomewhereElse){
@@ -320,7 +323,7 @@ abstract class LocatorPageState extends State<LocatorPage> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  TripConfirmationMap(routeData.origin, routeData.destination),
+                  TripConfirmationMap(routeData.origin, routeData.destination, GoBackSomewhereElsePage()),
             ));
       } else {
         //go to get alt location
@@ -340,6 +343,13 @@ abstract class LocatorPageState extends State<LocatorPage> {
             ));
 
       }
+    } else if (intent is GoBackToHomeLocatorPage){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                TripConfirmationMap(routeData.origin, routeData.destination, GoBackToHomeLocatorPage()),
+          ));
     }
   }
 
