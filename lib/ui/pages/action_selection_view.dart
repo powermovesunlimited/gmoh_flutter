@@ -282,7 +282,7 @@ class _ActionSelectionViewState extends State<ActionSelectionView>
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TripConfirmationMap(route.origin, route.destination),
+            builder: (context) => TripConfirmationMap(route.origin, route.destination, GoBackToHomeLocatorPage()),
           ),
         );
       } else if (widget.homeLocationResult is HomeLocationNotSet) {

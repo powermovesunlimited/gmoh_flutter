@@ -1,21 +1,33 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
+import 'package:gmoh_app/io/models/home_location_result.dart';
 import 'package:gmoh_app/io/repository/trip_route_repo.dart';
 import 'package:gmoh_app/ui/blocs/trip_route_bloc.dart';
+import 'package:gmoh_app/ui/models/route_data.dart';
+import 'package:gmoh_app/ui/models/route_intent.dart';
 import 'package:gmoh_app/ui/pages/action_selection_page.dart';
+import 'package:gmoh_app/ui/pages/finding_your_ride_loading.dart';
+import 'package:gmoh_app/ui/pages/locator/alt_location_page.dart';
+import 'package:gmoh_app/ui/pages/locator/current_user_location.dart';
+import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
+import 'package:gmoh_app/ui/pages/locator/locator_page.dart';
 import 'package:gmoh_app/ui/pages/ride_party_page.dart';
 import 'package:gmoh_app/util/hex_color.dart';
+import 'package:gmoh_app/util/permissions_helper.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class TripConfirmationMap extends StatefulWidget {
   final LatLng origin;
   final LatLng destination;
+  final RouteIntent intent;
 
-  TripConfirmationMap(this.origin, this.destination);
+  TripConfirmationMap(this.origin, this.destination, this.intent,);
 
   @override
   State<StatefulWidget> createState() => TripConfirmationMapState();
@@ -26,6 +38,11 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
   final Map<String, Marker> _markers = {};
   TripRouteBloc _tripRouteBloc;
   Polyline _polyline;
+  RouteData route = new RouteData();
+  Position userPosition;
+  var hasRequestedLocationPermission = false;
+  final permissionsHelper = new PermissionsHelper();
+
   static const LatLng _DEFAULT_POSITION = LatLng(39.50, -98.35);
 
   TripConfirmationMapState();
@@ -64,8 +81,8 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
         CameraPosition(target: start, zoom: 12)));
   }
 
-  Widget buildTripConfirmationView(
-      BuildContext context, LatLng initialPosition) {
+  Widget buildTripConfirmationView(BuildContext context,
+      LatLng initialPosition) {
     return WillPopScope(
       onWillPop: () async {
         Navigator.push(
@@ -87,33 +104,33 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
                 backgroundColor: Colors.transparent,
-                  appBar: AppBar(
-                    title: const Text('Exit'),
-                    backgroundColor: Colors.transparent,
-                    leading: IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      onPressed: () {
-                       Navigator.push(
+                appBar: AppBar(
+                  title: const Text('Exit'),
+                  backgroundColor: Colors.transparent,
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.push(
                           context,
-                           MaterialPageRoute(
-                          builder: (context) => ActionSelectionPage()));
-                      },
+                          MaterialPageRoute(
+                              builder: (context) => ActionSelectionPage()));
+                    },
                   ),
                   elevation: 0,
                 ),
-                 body: Column(
-                    children: <Widget>[
-                      setupPageTitleCard(),
-                      setupTripMap(initialPosition),
-                      Stack(
-                        children: [
-                          setupEditButton(),
-                          setupContinueButton()
-                        ],
-                      ),
-              ],
-            ),
-          )),
+                body: Column(
+                  children: <Widget>[
+                    setupPageTitleCard(),
+                    setupTripMap(initialPosition),
+                    Stack(
+                      children: [
+                        setupEditButton(),
+                        setupContinueButton()
+                      ],
+                    ),
+                  ],
+                ),
+              )),
         ),
       ),
     );
@@ -127,7 +144,7 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
         height: 40,
         child: RaisedButton(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -159,13 +176,14 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
 
   Container setupEditButton() {
     return Container(
-        margin: const EdgeInsets.only(top: 8.0, right: 210.0, left: 24.0, bottom: 18.0),
+        margin: const EdgeInsets.only(
+            top: 8.0, right: 210.0, left: 24.0, bottom: 18.0),
         child: SizedBox(
           width: double.infinity,
           height: 40,
           child: RaisedButton(
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -182,7 +200,7 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
             textColor: Colors.white,
             elevation: 4,
             onPressed: () {
-              Navigator.of(context).pop(true);
+              editDestination();
             },
           ),
         ));
@@ -192,7 +210,10 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
     return Expanded(
       flex: 5,
       child: Container(
-        height: MediaQuery.of(context).size.height / 1.5,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height / 1.5,
         margin: EdgeInsets.fromLTRB(24, 12, 24, 8),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(100)),
         child: ClipRRect(
@@ -259,6 +280,155 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
       markerId: MarkerId(title),
       position: latLng,
       infoWindow: InfoWindow(title: title),
+    );
+  }
+
+  Future editDestination() async {
+    RouteData route = RouteData();
+    final intent = widget.intent;
+
+    route.origin = LatLng(widget.origin.latitude, widget.origin.longitude);
+    route.destination = LatLng(widget.origin.latitude, widget.origin.longitude);
+
+//    if (intent is !GoHome){
+//      attemptToRetrieveUserPosition(GoSomewhereElse(), context);
+//    }else {
+//      attemptToRetrieveUserPosition(GoHome(), context);
+//    }
+
+    attemptToRetrieveUserPosition(GoHome(), context);
+
+
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    // cancel loading animation
+    setState(() {
+      userPosition = position;
+    });
+
+    route.origin = LatLng(position.latitude, position.longitude);
+
+
+    if (widget.intent is GoBackToHomeLocatorPage) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => HomeLocatorPage(route, intent),
+          ), ModalRoute.withName('/homeLocatorPage'));
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => AlternateLocationPage(route, intent),
+          ), ModalRoute.withName('/altLocationPage'));
+    }
+  }
+
+  void attemptToRetrieveUserPosition(RouteIntent intent,
+      BuildContext context) async {
+    var locationPermissionGranted =
+    await permissionsHelper.isLocationPermissionGranted();
+
+    if (!locationPermissionGranted && !hasRequestedLocationPermission) {
+      requestLocationPermission(intent, context);
+      return;
+    } else if (locationPermissionGranted) {
+      useGPSLocationThenNavigateToNextPage(intent);
+    }
+  }
+
+  void requestLocationPermission(RouteIntent intent,
+      BuildContext context) async {
+    switch (await permissionsHelper.requestLocationPermission()) {
+      case PermissionStatus.denied:
+        {
+          setState(() {
+            hasRequestedLocationPermission = false;
+          });
+          permissionsHelper.onLocationPermissionDenied(context).then((value) =>
+              findUserLocationThenNavigateToNextPage(intent, context));
+        }
+        break;
+      case PermissionStatus.permanentlyDenied:
+        {
+          setState(() {
+            hasRequestedLocationPermission = false;
+          });
+          permissionsHelper.onLocationPermissionPermanentlyDenied(context);
+        }
+        break;
+      case PermissionStatus.granted:
+        {
+          setState(() {
+            hasRequestedLocationPermission = true;
+          });
+          useGPSLocationThenNavigateToNextPage(intent);
+        }
+        break;
+      case PermissionStatus.restricted:
+        {
+          setState(() {
+            hasRequestedLocationPermission = false;
+          });
+          permissionsHelper.onLocationPermissionDenied(context).then((value) =>
+              findUserLocationThenNavigateToNextPage(intent, context));
+        }
+        break;
+      case PermissionStatus.undetermined:
+        {
+          setState(() {
+            hasRequestedLocationPermission = false;
+          });
+          permissionsHelper.onLocationPermissionDenied(context).then((value) =>
+              findUserLocationThenNavigateToNextPage(intent, context));
+        }
+    }
+  }
+
+  Future useGPSLocationThenNavigateToNextPage(RouteIntent intent) async {
+//    start loading animation
+    launchLoadingAnimation(userPosition);
+
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    // cancel loading animation
+    setState(() {
+      userPosition = position;
+    });
+    RouteData route = RouteData();
+    route.origin = LatLng(position.latitude, position.longitude);
+
+    if (intent is GoBackToHomeLocatorPage) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeLocatorPage(route, intent),
+        ),
+      );
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AlternateLocationPage(route, intent),
+          ));
+    }
+  }
+
+  Future launchLoadingAnimation(Position position) async {
+    if (position == null) {
+//      Show loading animation
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FindYourRideLoadingPage(),));
+    }
+  }
+
+  Future findUserLocationThenNavigateToNextPage(RouteIntent intent,
+      BuildContext context) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CurrentUserLocationPage(RouteData(), intent),
+      ),
     );
   }
 }
