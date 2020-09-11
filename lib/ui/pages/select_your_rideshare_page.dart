@@ -12,6 +12,7 @@ import 'package:gmoh_app/util/ride_share_item.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:device_apps/device_apps.dart';
 
 class SelectRideSharePage extends StatefulWidget {
   final LatLng origin;
@@ -229,12 +230,17 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     final destinationLog = widget.destination.longitude;
     final String productId = (widget.riderCount > 3)? "lyft_plus": "lyft";
     final String clientId = "gzE1yek-6yTk";
-    final String lyftUrl =
+    final String lyftAppUrl =
         "https://lyft.com/ride?id=$productId&pickup[latitude]=$originLat&pickup[longitude]=$originLog&partner=$clientId&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog";
-    if (await canLaunch(lyftUrl)) {
-      await launch(lyftUrl);
+     final String lyftWebUrl =
+        "https://ride.lyft.com/ridetype?id=lyft_plus&pickup[latitude]=$originLat&pickup[longitude]=$originLog&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog&destination=$destinationLat,$destinationLog&destinationName&origin=$originLat,$originLog&originName&offerProductId=standard";
+    bool isInstalled = await DeviceApps.isAppInstalled('com.frandroid.app');
+    print("select your rideshare page $isInstalled");
+
+     if (await canLaunch(lyftWebUrl)) {
+      await launch(lyftWebUrl);
     } else {
-      throw 'Could not launch $lyftUrl';
+      throw 'Could not launch $lyftWebUrl';
     }
   }
 
