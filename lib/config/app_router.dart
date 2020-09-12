@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:gmoh_app/ui/pages/action_selection_page.dart';
 
 class AppRouter {
-  static Router router = Router();
+  static Router appRouter = Router();
   static Handler _actionSelectionHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           ActionSelectionPage());
 
   static void setupRouter() {
-    router.define('action_selection', handler: _actionSelectionHandler);
+    appRouter.define('action_selection', handler: _actionSelectionHandler);
   }
 }
