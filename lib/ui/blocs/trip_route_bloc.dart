@@ -1,10 +1,9 @@
-import 'package:geolocator/geolocator.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:gmoh_app/io/models/trip_route_response.dart';
 import 'package:gmoh_app/io/repository/trip_route_repo.dart';
 import 'package:gmoh_app/ui/models/error_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rxdart/subjects.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 
 class TripRouteBloc {

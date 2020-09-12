@@ -1,9 +1,10 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:gmoh_app/io/models/location_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'dart:async';
-import 'dart:io';
-import 'package:gmoh_app/io/models/location_model.dart';
 
 class LocationDatabase {
   static final LocationDatabase _instance = LocationDatabase._internal();

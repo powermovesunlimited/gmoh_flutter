@@ -3,23 +3,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
-import 'package:gmoh_app/io/models/home_location_result.dart';
 import 'package:gmoh_app/io/repository/trip_route_repo.dart';
 import 'package:gmoh_app/ui/blocs/trip_route_bloc.dart';
 import 'package:gmoh_app/ui/models/route_data.dart';
 import 'package:gmoh_app/ui/models/route_intent.dart';
 import 'package:gmoh_app/ui/pages/action_selection_page.dart';
-import 'package:gmoh_app/ui/pages/finding_your_ride_loading.dart';
 import 'package:gmoh_app/ui/pages/locator/alt_location_page.dart';
-import 'package:gmoh_app/ui/pages/locator/current_user_location.dart';
 import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
-import 'package:gmoh_app/ui/pages/locator/locator_page.dart';
 import 'package:gmoh_app/ui/pages/ride_party_page.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/permissions_helper.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class TripConfirmationMap extends StatefulWidget {

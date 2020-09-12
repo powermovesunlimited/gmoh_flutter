@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:gmoh_app/io/models/home_location_result.dart';
 import 'package:gmoh_app/ui/models/route_data.dart';
 import 'package:gmoh_app/ui/models/route_intent.dart';
 import 'package:gmoh_app/ui/pages/locator/locator_page.dart';
