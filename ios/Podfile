@@ -39,5 +39,10 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+    build_phase = target.build_phases.find { |bp| bp.display_name == '[CP] Copy Pods Resources' }
+
+          if build_phase.present?
+            build_phase.input_paths.push('${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car')
+          end
   end
 end
