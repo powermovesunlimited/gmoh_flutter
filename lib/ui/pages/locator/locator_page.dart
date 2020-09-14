@@ -350,6 +350,13 @@ abstract class LocatorPageState extends State<LocatorPage> {
             builder: (context) =>
                 TripConfirmationMap(routeData.origin, routeData.destination, GoBackToHomeLocatorPage()),
           ));
+    } else if (intent is GoBackSomewhereElsePage){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                TripConfirmationMap(routeData.origin, routeData.destination, GoBackSomewhereElsePage()),
+          ));
     }
   }
 
