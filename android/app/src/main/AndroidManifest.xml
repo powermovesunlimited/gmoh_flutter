@@ -8,6 +8,7 @@
          FlutterApplication and put your custom class here. -->
 
      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-library android:name="org.apache.http.legacy" android:required="false"/>
          
     <application
         android:name="io.flutter.app.FlutterApplication"
