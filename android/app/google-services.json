@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:445095663620:android:abb502060a21f47540bd51",
         "android_client_info": {
-          "package_name": "com.pmd.gmohapp"
+          "package_name": "com.example.gmoh_app"
         }
       },
       "oauth_client": [

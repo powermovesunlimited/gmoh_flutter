@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gmoh_app/config/app_router.dart';
 import 'package:gmoh_app/util/connectivity_service.dart';
@@ -5,8 +6,10 @@ import 'package:gmoh_app/util/connectivity_status.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   AppRouter.setupRouter();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
