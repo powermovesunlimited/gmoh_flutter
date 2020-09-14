@@ -227,14 +227,17 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     final originLog = widget.origin.longitude;
     final destinationLat = widget.destination.latitude;
     final destinationLog = widget.destination.longitude;
-    final String productId = (widget.riderCount > 3)? "lyft_plus": "lyft";
-    final String clientId = "gzE1yek-6yTk";
-    final String lyftUrl =
-        "https://lyft.com/ride?id=$productId&pickup[latitude]=$originLat&pickup[longitude]=$originLog&partner=$clientId&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog";
-    if (await canLaunch(lyftUrl)) {
-      await launch(lyftUrl);
+    final String productId = (widget.riderCount > 3) ? "lyft_plus" : "lyft";
+
+    if (await canLaunch("lyft://")) {
+      final String clientId = "gzE1yek-6yTk";
+      final String lyftAppUrl =
+          "ride?id=$productId&pickup[latitude]=$originLat&pickup[longitude]=$originLog&partner=$clientId&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog";
+      await launch("lyft://$lyftAppUrl").then((value) => print("$value"));
     } else {
-      throw 'Could not launch $lyftUrl';
+      final String lyftWebUrl =
+          "https://ride.lyft.com/ridetype?id=lyft_plus&pickup[latitude]=$originLat&pickup[longitude]=$originLog&destination[latitude]=$destinationLat&destination[longitude]=$destinationLog&destination=$destinationLat,$destinationLog&destinationName&origin=$originLat,$originLog&originName&offerProductId=standard";
+      await launch(lyftWebUrl).then((value) => print("$value"));
     }
   }
 
