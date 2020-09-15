@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       ],child:MaterialApp(
         title: 'Flutter Demo',
         initialRoute: 'action_selection',
-        onGenerateRoute: AppRouter.router.generator,
+        onGenerateRoute: AppRouter.appRouter.generator,
         theme: ThemeData(
           fontFamily: 'Montserrat',
           primarySwatch: Colors.blue,

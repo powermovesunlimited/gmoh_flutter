@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
-import 'package:gmoh_app/io/models/home_location_result.dart';
 import 'package:gmoh_app/io/repository/destinations_search_repo.dart';
 import 'package:gmoh_app/ui/blocs/destination_search_bloc.dart';
 import 'package:gmoh_app/ui/models/route_data.dart';

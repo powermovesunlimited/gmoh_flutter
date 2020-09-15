@@ -1,14 +1,14 @@
-import 'package:fluro/fluro.dart';
+import 'package:fluro/fluro.dart' as fluro;
 import 'package:flutter/cupertino.dart';
 import 'package:gmoh_app/ui/pages/action_selection_page.dart';
 
 class AppRouter {
-  static Router router = Router();
-  static Handler _actionSelectionHandler = Handler(
+  static fluro.Router appRouter = fluro.Router();
+  static fluro.Handler _actionSelectionHandler = fluro.Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) =>
           ActionSelectionPage());
 
   static void setupRouter() {
-    router.define('action_selection', handler: _actionSelectionHandler);
+    appRouter.define('action_selection', handler: _actionSelectionHandler);
   }
 }

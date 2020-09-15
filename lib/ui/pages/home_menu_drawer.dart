@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:gmoh_app/io/database/location_database.dart';
 import 'package:gmoh_app/io/repository/location_repo.dart';

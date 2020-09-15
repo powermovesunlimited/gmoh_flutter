@@ -1,7 +1,7 @@
-import 'package:google_maps_webservice/places.dart';
+import 'package:gmoh_app/io/models/places_search_result.dart';
 
 class PlaceDetailsResponse {
-  final PlacesSearchResult result;
+  final PlacesSearchDetailsResult result;
 
   final String errorMessage;
 
@@ -9,7 +9,7 @@ class PlaceDetailsResponse {
 
   factory PlaceDetailsResponse.fromJson(Map json) => json != null
       ? PlaceDetailsResponse(
-           PlacesSearchResult.fromJson(json['result']), null)
+           PlacesSearchDetailsResult.fromJson(json['result']), null)
       : null;
 
   PlaceDetailsResponse.onError(error)
