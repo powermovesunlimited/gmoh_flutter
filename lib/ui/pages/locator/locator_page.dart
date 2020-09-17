@@ -62,102 +62,100 @@ abstract class LocatorPageState extends State<LocatorPage> {
                 image: AssetImage("assets/images/background1300.png"),
                 fit: BoxFit.fill),
           ),
-          child: SafeArea(
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              title: const Text('Exit'),
               backgroundColor: Colors.transparent,
-              appBar: AppBar(
-                title: const Text('Exit'),
-                backgroundColor: Colors.transparent,
-                leading: IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ActionSelectionPage()));
-                  },
-                ),
-                elevation: 0,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ActionSelectionPage()));
+                },
               ),
-              body: Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 24.0, right: 24.0, left: 24.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      gradient: LinearGradient(
-                          colors: [HexColor("#078B91"), HexColor("#336D6B")]),
-                    ),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 96,
-                      child: Center(
-                        child: Text(
-                          getAppBarTitle(),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ),
+              elevation: 0,
+            ),
+            body: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 24.0, right: 24.0, left: 24.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: LinearGradient(
+                        colors: [HexColor("#078B91"), HexColor("#336D6B")]),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                          color: Colors.white,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(6))),
-                    margin: const EdgeInsets.only(
-                        top: 18.0, right: 24.0, left: 24.0),
-                    child: Container(
-                      transform: Matrix4.translationValues(-20.0, 0.0, 0.0),
-                      child: TextField(
-                        controller: _textController,
-                        textAlign: TextAlign.start,
-                        textAlignVertical: TextAlignVertical.center,
-                        textDirection: TextDirection.ltr,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          prefixIcon: Container(
-                            transform:
-                                Matrix4.translationValues(10.0, 0.0, 0.0),
-                            child: Icon(
-                              Icons.search,
-                              size: 24,
-                              color: HexColor("#078B91"),
-                            ),
-                          ),
-                          hintText: getHintText(),
-                          fillColor: Colors.white,
-                        ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 96,
+                    child: Center(
+                      child: Text(
+                        getAppBarTitle(),
+                        textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 13.0,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w400,
-                        ),
-                        onChanged: (searchText) {
-                          onTextChangedListener.add(searchText);
-                        },
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w400),
                       ),
                     ),
                   ),
-                  Container(
-                      transform: Matrix4.translationValues(0.0, -8.0, 0.0),
-                      child: searchResult != null
-                          ? buildSuggestionList(searchResult)
-                          : Container()),
-                  setupContinueButton(searchResult),
-                ],
-              ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.white,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(6))),
+                  margin: const EdgeInsets.only(
+                      top: 18.0, right: 24.0, left: 24.0),
+                  child: Container(
+                    transform: Matrix4.translationValues(-20.0, 0.0, 0.0),
+                    child: TextField(
+                      controller: _textController,
+                      textAlign: TextAlign.start,
+                      textAlignVertical: TextAlignVertical.center,
+                      textDirection: TextDirection.ltr,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        prefixIcon: Container(
+                          transform:
+                              Matrix4.translationValues(10.0, 0.0, 0.0),
+                          child: Icon(
+                            Icons.search,
+                            size: 24,
+                            color: HexColor("#078B91"),
+                          ),
+                        ),
+                        hintText: getHintText(),
+                        fillColor: Colors.white,
+                      ),
+                      style: TextStyle(
+                        fontSize: 13.0,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w400,
+                      ),
+                      onChanged: (searchText) {
+                        onTextChangedListener.add(searchText);
+                      },
+                    ),
+                  ),
+                ),
+                Container(
+                    transform: Matrix4.translationValues(0.0, -10.0, 0.0),
+                    child: searchResult != null
+                        ? buildSuggestionList(searchResult)
+                        : Container()),
+                setupContinueButton(searchResult),
+              ],
             ),
           ),
         ),
@@ -165,43 +163,49 @@ abstract class LocatorPageState extends State<LocatorPage> {
     );
   }
 
-  Flexible setupContinueButton(DestinationSearchResult searchResult) {
-    return Flexible(
-      child: Container(
-        margin: const EdgeInsets.only(top: 8.0, right: 24.0),
-        child: Align(
-          alignment: Alignment.topRight,
-          child: SizedBox(
-            width: 200,
-            height: 40,
-            child: RaisedButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(getContinueButtonText(),
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w400)),
-                  Icon(
-                    Icons.chevron_right,
-                    size: 20,
+  Flex setupContinueButton(DestinationSearchResult searchResult) {
+    return Flex(
+      direction: Axis.vertical,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Flexible(
+          child: Container(
+            margin: const EdgeInsets.only(top: 8.0, right: 24.0),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: SizedBox(
+                width: 200,
+                height: 40,
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(getContinueButtonText(),
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400)),
+                      Icon(
+                        Icons.chevron_right,
+                        size: 20,
+                      ),
+                    ],
                   ),
-                ],
+                  color: Colors.pinkAccent,
+                  textColor: Colors.white,
+                  elevation: 4,
+                  onPressed: () {
+                    navigateToNextPage();
+                  },
+                ),
               ),
-              color: Colors.pinkAccent,
-              textColor: Colors.white,
-              elevation: 4,
-              onPressed: () {
-                navigateToNextPage();
-              },
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 
@@ -209,43 +213,49 @@ abstract class LocatorPageState extends State<LocatorPage> {
     _bloc.searchPlacesByQuery(searchText, userPosition);
   }
 
-  Flexible buildSuggestionList(DestinationSearchResult searchResult) {
-    return Flexible(
-      child: Visibility(
-        visible: searchResult.results.length == 0 ? false : true,
-        child: Container(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(
-                color: Colors.white,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(6))),
-          margin: const EdgeInsets.only(right: 24.0, left: 24.0),
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: searchResult.results.length,
-            itemBuilder: (BuildContext context, int index) => GestureDetector(
-              child: createSuggestionItemView(context, index, searchResult),
-              onTap: () async {
-                final placeDetails = await _bloc
-                    .getPlaceDetails(searchResult.results[index].placeId);
-                final latitude = placeDetails.geometry.location.lat;
-                final longitude = placeDetails.geometry.location.lng;
-                final address = placeDetails.formattedAddress;
+  Flex buildSuggestionList(DestinationSearchResult searchResult) {
+    return Flex(
+      direction: Axis.vertical,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Flexible(
+          child: Visibility(
+            visible: searchResult.results.length == 0 ? false : true,
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.white,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(6))),
+              margin: const EdgeInsets.only(right: 24.0, left: 24.0),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: searchResult.results.length,
+                itemBuilder: (BuildContext context, int index) => GestureDetector(
+                  child: createSuggestionItemView(context, index, searchResult),
+                  onTap: () async {
+                    final placeDetails = await _bloc
+                        .getPlaceDetails(searchResult.results[index].placeId);
+                    final latitude = placeDetails.geometry.location.lat;
+                    final longitude = placeDetails.geometry.location.lng;
+                    final address = placeDetails.formattedAddress;
 
-                FocusScope.of(context).unfocus();
-                setState(() {
-                  var latLng = LatLng(latitude, longitude);
-                  routeData.destination = latLng;
-                  _textController.text = placeDetails.formattedAddress;
-                  searchResult.results.clear();
-                  onAddressSelected(address, latLng);
-                });
-              },
+                    FocusScope.of(context).unfocus();
+                    setState(() {
+                      var latLng = LatLng(latitude, longitude);
+                      routeData.destination = latLng;
+                      _textController.text = placeDetails.formattedAddress;
+                      searchResult.results.clear();
+                      onAddressSelected(address, latLng);
+                    });
+                  },
+                ),
+              ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 
@@ -270,15 +280,21 @@ abstract class LocatorPageState extends State<LocatorPage> {
   }
 
   String getAppBarTitle() {
-    return "Where to exactly ?";
+    var text;
+    text = "Where to exactly ?" !=null;
+    return text;
   }
 
   String getContinueButtonText() {
-    return "Set Home and Go";
+    var text;
+    text = "Set Home and Go" !=null;
+    return text;
   }
 
   String getHintText() {
-    return "Enter your destination address here...";
+    var text;
+    text = "Enter your destination address here..." !=null;
+    return text;
   }
 
   @override
