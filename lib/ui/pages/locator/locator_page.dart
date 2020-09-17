@@ -150,7 +150,7 @@ abstract class LocatorPageState extends State<LocatorPage> {
                   ),
                 ),
                 Container(
-                    transform: Matrix4.translationValues(0.0, -8.0, 0.0),
+                    transform: Matrix4.translationValues(0.0, -10.0, 0.0),
                     child: searchResult != null
                         ? buildSuggestionList(searchResult)
                         : Container()),
