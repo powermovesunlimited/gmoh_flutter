@@ -165,53 +165,6 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer>
                       ],
                     ),
                   ),
-                  ListTile(
-                    title: Container(
-                      margin: EdgeInsets.only(
-                          top: 10.0, right: 0.0, left: 0.0, bottom: 10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.pinkAccent,
-                      ),
-                      child: SizedBox(
-                        height: 50,
-                        child: Center(
-                          child: Text(
-                            "Settings",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                    title: Container(
-                      margin: EdgeInsets.only(
-                          top: 10.0, right: 0.0, left: 0.0, bottom: 10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.pinkAccent,
-                      ),
-                      child: SizedBox(
-                        height: 50,
-                        child: Center(
-                          child: Text(
-                            "Help",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
 //
 //   Use the commented code below when you need to manually navigate to a different page just update the navigator and Text
 //
