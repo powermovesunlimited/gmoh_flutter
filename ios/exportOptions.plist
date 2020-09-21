@@ -9,7 +9,7 @@
     <key>provisioningProfiles</key>
     <dict>
         <key>com.pmd.gmohapp</key>
-        <string>Test Provisioning</string>
+        <string>Release Provision</string>
     </dict>
     <key>signingCertificate</key>
     <string>iOS Distribution</string>
@@ -22,6 +22,6 @@
     <key>thinning</key>
     <string>&lt;none&gt;</string>
     <key>method</key>
-    <string>ad-hoc</string>
+    <string>app-store</string>
 </dict>
 </plist>
