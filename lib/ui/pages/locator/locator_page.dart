@@ -362,11 +362,15 @@ abstract class LocatorPageState extends State<LocatorPage> {
         isInternetConnectivityAvailable? goForwardToMapFromHome(): showNoConnectivityDialog();
       } else if (routeData.destination == null) {
         //go to get home location
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomeLocatorPage(routeData, GoBackToHomeLocatorPage()),
-            ));
+
+        goBackToHomeLocator(){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeLocatorPage(routeData, GoBackToHomeLocatorPage()),
+              ));
+        }
+        isInternetConnectivityAvailable? goBackToHomeLocator(): showNoConnectivityDialog();
       }
     } else if (intent is GoSomewhereElse){
       if (routeData.destination != null) {
@@ -382,11 +386,16 @@ abstract class LocatorPageState extends State<LocatorPage> {
         isInternetConnectivityAvailable? goForwardToMap(): showNoConnectivityDialog();
       } else {
         //go to get alt location
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AlternateLocationPage(routeData, intent),
-            ));
+
+        goBackToAltLocation(){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AlternateLocationPage(routeData, intent),
+              ));
+        }
+        isInternetConnectivityAvailable? goBackToAltLocation(): showNoConnectivityDialog();
+
       }
     } else if (intent is GoHomePage) {
       if (routeData.destination != null) {
