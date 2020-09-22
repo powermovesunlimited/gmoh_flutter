@@ -1,3 +1,4 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gmoh_app/io/apis/google_api_services.dart';
@@ -9,6 +10,7 @@ import 'package:gmoh_app/ui/pages/action_selection_page.dart';
 import 'package:gmoh_app/ui/pages/locator/alt_location_page.dart';
 import 'package:gmoh_app/ui/pages/locator/home_locator_page.dart';
 import 'package:gmoh_app/ui/pages/trip_confirmation_map.dart';
+import 'package:gmoh_app/util/connectivity_status.dart';
 import 'package:gmoh_app/util/hex_color.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -42,6 +44,37 @@ abstract class LocatorPageState extends State<LocatorPage> {
       getLocationResults(searchText);
     });
     super.initState();
+  }
+
+  bool isInternetConnectivityAvailable;
+
+  void getNetworkConnectivity() {
+    final connectionStatus = Provider.of<ConnectivityStatus>(context, listen: false);
+    if (connectionStatus == ConnectivityStatus.Cellular ||
+        connectionStatus == ConnectivityStatus.WiFi) {
+      isInternetConnectivityAvailable = true;
+    } else {
+      isInternetConnectivityAvailable = false;
+    }
+  }
+
+  void showNoConnectivityDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("No Internet Connection"),
+          content: Text("You are offline. \n"
+              "Please enable Mobile Data or Wifi inorder to use this application"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () async {
+                AppSettings.openDataRoamingSettings();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ));
   }
 
   Widget buildContentView(DestinationSearchResult searchResult) {
@@ -311,18 +344,22 @@ abstract class LocatorPageState extends State<LocatorPage> {
   }
 
   void navigateToNextPage() {
+    getNetworkConnectivity();
     final intent = widget.routeIntent;
     print("this is the locator page intent $intent");
 
     if (intent is GoHome) {
       if (routeData.origin != null && routeData.destination != null) {
         //go to map
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  TripConfirmationMap(routeData.origin, routeData.destination, intent),
-            ));
+        goForwardToMapFromHome(){
+          return Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    TripConfirmationMap(routeData.origin, routeData.destination, intent),
+              ));
+        }
+        isInternetConnectivityAvailable? goForwardToMapFromHome(): showNoConnectivityDialog();
       } else if (routeData.destination == null) {
         //go to get home location
         Navigator.push(
@@ -334,12 +371,15 @@ abstract class LocatorPageState extends State<LocatorPage> {
     } else if (intent is GoSomewhereElse){
       if (routeData.destination != null) {
         // go to map
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  TripConfirmationMap(routeData.origin, routeData.destination, GoBackSomewhereElsePage()),
-            ));
+        goForwardToMap(){
+          return Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    TripConfirmationMap(routeData.origin, routeData.destination, GoBackSomewhereElsePage()),
+              ));
+        }
+        isInternetConnectivityAvailable? goForwardToMap(): showNoConnectivityDialog();
       } else {
         //go to get alt location
         Navigator.push(
