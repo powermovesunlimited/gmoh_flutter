@@ -165,38 +165,6 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer>
                       ],
                     ),
                   ),
-//
-//   Use the commented code below when you need to manually navigate to a different page just update the navigator and Text
-//
-//                  ListTile(
-//                    title: Container(
-//                      margin: EdgeInsets.only(
-//                          top: 10.0, right: 0.0, left: 0.0, bottom: 10.0),
-//                      decoration: BoxDecoration(
-//                        borderRadius: BorderRadius.circular(10),
-//                        color: Colors.pinkAccent,
-//                      ),
-//                      child: FlatButton(
-//                        shape: RoundedRectangleBorder(
-//                            borderRadius: BorderRadius.circular(12)),
-//                        child: Text(
-//                          'RIDE SHARE',
-//                          style: TextStyle(
-//                              color: Colors.white,
-//                              fontSize: 14,
-//                              fontFamily: 'Montserrat',
-//                              fontWeight: FontWeight.w400),
-//                        ),
-//                        color: Colors.pinkAccent,
-//                        textColor: Colors.white,
-//                        onPressed: () {
-//                          final testRoute = TripRouteResult(LatLng(39.50, -98.35), LatLng(39.50, -98.35), null, null);
-//                          final rideShareRides = RidesList().rides;
-//                          Navigator.push(context, MaterialPageRoute(builder: (context) => SelectRideSharePage(testRoute, rideShareRides)));
-//                        },
-//                      ),
-//                    ),
-//                  ),
                 ],
               ),
             ),
