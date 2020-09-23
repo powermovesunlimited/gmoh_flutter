@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/services.dart';
 
 import 'connectivity_status.dart';
 
@@ -10,9 +11,18 @@ class ConnectivityService {
       StreamController<ConnectivityStatus>();
 
   ConnectivityService() {
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      connectionStatusController.add(_getStatusFromResult(result));
-    });
+    initConnectivity();
+  }
+
+  initConnectivity() async {
+    ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await Connectivity().checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+    connectionStatusController.add(_getStatusFromResult(result));
   }
 
   ConnectivityStatus _getStatusFromResult(ConnectivityResult result) {
