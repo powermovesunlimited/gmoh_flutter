@@ -81,38 +81,9 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer>
               color: HexColor("#2B2C2C"),
               child: ListView(
                 children: <Widget>[
-                  DrawerHeader(
-                      child: Row(
-                    children: [
-                      Container(
-                        width: 90.0,
-                        height: 90.0,
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(width: 3, color: Colors.pinkAccent),
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: AssetImage('assets/images/profileImage.jpg'),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment(.9, .6),
-                        child: Text(
-                          "Rider Name",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ],
-                  )),
                   Container(
                     margin: EdgeInsets.only(
-                        top: 10.0, right: 15.0, left: 15.0, bottom: 10.0),
+                        top: 50.0, right: 15.0, left: 15.0, bottom: 10.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(
                         10,
