@@ -1,76 +1,170 @@
 import 'package:flutter/material.dart';
-import 'package:gmoh_app/ui/pages/ride_party_dialog.dart';
+import 'package:gmoh_app/ui/pages/select_your_rideshare_page.dart';
+import 'package:gmoh_app/util/hex_color.dart';
+import 'package:gmoh_app/util/rides_list.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class RidePartyPage extends StatelessWidget {
+class RidePartyPage extends StatefulWidget {
+
+  final LatLng origin;
+  final LatLng destination;
+
+  RidePartyPage( this.origin, this.destination);
+
+  @override
+  _RidePartyPageState createState() => _RidePartyPageState();
+}
+
+class _RidePartyPageState extends State<RidePartyPage> {
+  int _riderCount = 0;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           title: Text(
-        "Get Me Outta Here!",
+        "Exit",
         textAlign: TextAlign.center,
       )),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-              margin: EdgeInsets.only(top: 40.0),
-              child: Center(
-                child: Text(
-                  'Is this ride just for you?',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 32,
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w700),
-                ),
-              )),
-          Container(
-            margin: EdgeInsets.only(top: 72.0, right: 24.0, left: 24.0),
-            child: SizedBox(
-              width: double.infinity,
-              height: 100,
-              child: MaterialButton(
-                child: Text('Yes, Just Me',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w700)),
-                color: Colors.cyan,
-                textColor: Colors.white,
-                elevation: 4,
-                onPressed: () {},
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 24.0, right: 24.0, left: 24.0),
-            child: SizedBox(
-              width: double.infinity,
-              height: 100,
-              child: MaterialButton(
-                child: Text('No, I\u0027m with others',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w700)),
-                color: Colors.deepPurple,
-                textColor: Colors.white,
-                elevation: 4,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => RidePartyDialog(
-                      title: "How many?",
-                      buttonText: "Okay",
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/background1300.png"),
+              fit: BoxFit.fill),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(margin: EdgeInsets.only(top: 0.0, right: 24.0, left: 24.0),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: HexColor("#078B91"),),
+              child: SizedBox(
+                width: double.infinity,
+                height: 120,
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+                  child: Center(
+                    child: Text('How many people are riding?',
+                      style: TextStyle(color: Colors.white,
+                          fontSize: 18,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w400),
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
+            Column(
+              children: [
+                Container(
+                  alignment: FractionalOffset.center,
+                  margin: EdgeInsets.only(top: 20.0, right: 24.0, left: 24.0),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 0.0, right: 10.0, left: 0.0),
+                          child: SizedBox(
+                            height: 100,
+                            child: RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Text('1 -3',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w400)),
+                              color: (_riderCount == 3)
+                                  ? HexColor("#de5d54")
+                                  : Colors.pinkAccent,
+                              textColor: Colors.white,
+                              elevation: 4,
+                              onPressed: () {
+                                setState(() {
+                                  _riderCount = 3;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 0.0, right: 0.0, left: 10.0),
+                          child: SizedBox(
+                            height: 100,
+                            child: RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Text('4 +',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w400)),
+                              color: (_riderCount > 3)
+                                  ? HexColor("#de5d54")
+                                  : Colors.pinkAccent,
+                              textColor: Colors.white,
+                              elevation: 4,
+                              onPressed: () {
+                                setState(() {
+                                  _riderCount = 4;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  alignment: FractionalOffset.center,
+                  margin: EdgeInsets.only(top: 20.0, right: 24.0, left: 24.0),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),),
+                  child: SizedBox(
+                    height: 50,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Find my ride',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w400)),
+                          Icon(Icons.chevron_right),
+                        ],
+                      ),
+                      color: Colors.pinkAccent,
+                      textColor: Colors.white,
+                      elevation: 4,
+                      onPressed: () {
+                        final rideShareRides = RidesList().rides;
+                        print("Ride map data ${widget.origin},${widget.destination}");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SelectRideSharePage(widget.origin, widget.destination, rideShareRides, _riderCount),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,63 +1,78 @@
+import 'package:app_settings/app_settings.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 abstract class PermissionDialogListener {
   void onRequestPermission();
+
   void onPermissionDenied();
 }
 
 class PermissionsHelper {
-  final PermissionHandler _permissionHandler = PermissionHandler();
+  var userLocation;
 
-  Future<bool> requestLocationPermission() async {
-    return _requestPermission(PermissionGroup.locationWhenInUse);
+  requestLocationPermission() async {
+    return await Permission.location.request();
   }
 
-  Future<bool> _requestPermission(PermissionGroup permission) async {
-    var result = await _permissionHandler.requestPermissions([permission]);
-    if (result[permission] == PermissionStatus.granted) {
-      return true;
-    }
-    return false;
+  Future<bool> isLocationPermissionGranted() {
+    return Permission.location.isGranted;
   }
 
-  Future<bool> isLocationPermissionGranted() async {
-    return hasPermission(PermissionGroup.locationWhenInUse);
-  }
 
-  Future<bool> hasPermission(PermissionGroup permission) async {
-    var permissionStatus =
-        await _permissionHandler.checkPermissionStatus(permission);
-    return permissionStatus == PermissionStatus.granted;
-  }
-
-  void onLocationPermissionDenied(
-      BuildContext context, PermissionDialogListener listener) {
-    showDialog(
+  Future<String> onLocationPermissionDenied(BuildContext context) async {
+    return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Are you sure?'),
+            title: Text('Location Needed'),
             content: const Text(
                 'Location Permission is needed to determine where to pick you up. Do you want to enable it?'),
             actions: <Widget>[
               FlatButton(
                 child: Text('NO'),
-                onPressed: () {
-                  listener.onPermissionDenied();
-                  Navigator.pop(context);
+                onPressed: () async {
+                  Navigator.pop(context, "navigateDestination");
                 },
               ),
               FlatButton(
                 child: Text('YES'),
-                onPressed: () {
-                  listener.onRequestPermission();
-                  Navigator.pop(context);
+                onPressed: () async {
+                  Permission.location.isGranted;
+                  final Geolocator geolocator = Geolocator()
+                    ..forceAndroidLocationManager = true;
+                  await geolocator
+                      .getCurrentPosition(
+                          desiredAccuracy: LocationAccuracy.high)
+                      .then((result) {
+                    Navigator.pop(context, result);
+                  });
                 },
               )
             ],
           );
         });
+  }
+
+  void onLocationPermissionPermanentlyDenied(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Location Needed"),
+              content: Text(
+                  "Location Permission is needed to determine where to pick you up. Do you want to enable it?"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Go to Setting'),
+                  onPressed: () async {
+                    AppSettings.openAppSettings();
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ));
   }
 }

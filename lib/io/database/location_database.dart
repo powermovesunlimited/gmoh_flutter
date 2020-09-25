@@ -1,9 +1,10 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:gmoh_app/io/models/location_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'dart:async';
-import 'dart:io';
-import 'package:gmoh_app/io/models/location_model.dart';
 
 class LocationDatabase {
   static final LocationDatabase _instance = LocationDatabase._internal();
@@ -23,12 +24,12 @@ class LocationDatabase {
   Future<Database> initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "main.db");
-    return await openDatabase(path, version: 1, onCreate: _onCreate);
+    return await openDatabase(path, version: 3, onCreate: _onCreate);
   }
 
   void _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE Locations(id STRING PRIMARY KEY, type STRING, longitude DOUBLE, latitude DOUBLE)");
+        "CREATE TABLE Locations(id STRING PRIMARY KEY, type STRING, longitude DOUBLE, latitude DOUBLE, address STRING)");
     print("Database was Created!");
   }
 
@@ -45,20 +46,20 @@ class LocationDatabase {
 
     return res.isNotEmpty
         ? res
-            .map((entry) => Location(entry["id"], entry["longitude"],
-                entry["latitude"], entry["type"]))
+            .map((entry) => Location(entry["id"], entry["address"], entry["latitude"],
+                entry["longitude"], entry["type"]))
             .toList()
         : [];
   }
 
-  getLocationByType(String type) async {
+  Future<Location> getLocationByType(String type) async {
     final dbClient = await db;
-    var res =
+    var queryResponse =
         await dbClient.query('Locations', where: 'type = ?', whereArgs: [type]);
 
-    return res.isNotEmpty
-        ? Location(res.first["id"], res.first["longitude"],
-            res.first["latitude"], res.first["type"])
+    return queryResponse.isNotEmpty
+        ? Location(queryResponse.first["id"], queryResponse.first["address"], queryResponse.first["latitude"],
+            queryResponse.first["longitude"], getLocationTypeFromString(queryResponse.first["type"]))
         : null;
   }
 

@@ -11,6 +11,7 @@ main() => {
     const TEST_LNG = -115.8067;
     final testHomeLocation = Location(
       0,
+      "Test Addresss",
       TEST_LNG,
       TEST_LAT,
       LocationType.HOME
@@ -24,11 +25,11 @@ main() => {
     final locationBloc = UserLocationsBloc(mockLocationRepository);
 
     scheduleMicrotask((){
-      locationBloc.getHomeLocation();
+      locationBloc.fetchHomeLocation();
     });
 
    await expectLater(
-      locationBloc.locationDataObservable.stream
+      locationBloc.getLocationDataObservable()
     , emits(testHomeLocation));
   })
 };

@@ -1,5 +1,6 @@
 import 'dart:async' show Future;
 import 'dart:convert' show json;
+
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:gmoh_app/util/secret.dart';
 class SecretLoader {

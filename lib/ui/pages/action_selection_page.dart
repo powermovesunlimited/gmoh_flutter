@@ -6,6 +6,9 @@ import 'package:gmoh_app/io/models/location_model.dart';
 import 'package:gmoh_app/io/repository/location_repo.dart';
 import 'package:gmoh_app/ui/blocs/user_locations_bloc.dart';
 import 'package:gmoh_app/ui/pages/action_selection_view.dart';
+import 'package:gmoh_app/ui/pages/home_menu_drawer.dart';
+import 'package:gmoh_app/util/connectivity_status.dart';
+import 'package:provider/provider.dart';
 
 class ActionSelectionPage extends StatefulWidget {
   @override
@@ -32,19 +35,21 @@ class _ActionSelectionPageState extends State<ActionSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-          title: Text(
-        "Get Me Outta Here!",
-        textAlign: TextAlign.center,
-      )),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      drawer: HomeMenuDrawer(connectionStatus),
       body: StreamBuilder(
-        stream: _locationBloc.locationDataObservable.stream,
+        stream: _locationBloc.getLocationDataObservable(),
         builder: (BuildContext context, AsyncSnapshot<Location> snapshot) {
           if (snapshot.hasData) {
             return ActionSelectionView(HomeLocationSet(snapshot.data));
           } else if (!hasLoaded) {
-            _locationBloc.getHomeLocation();
+            _locationBloc.fetchHomeLocation();
             hasLoaded = true;
           }
           return ActionSelectionView(HomeLocationNotSet());
@@ -53,3 +58,4 @@ class _ActionSelectionPageState extends State<ActionSelectionPage> {
     );
   }
 }
+
