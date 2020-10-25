@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gmoh_app/config/app_router.dart';
+import 'package:gmoh_app/ui/pages/action_selection_page.dart';
+import 'package:gmoh_app/ui/pages/action_selection_view.dart';
 import 'package:gmoh_app/util/connectivity_service.dart';
 import 'package:gmoh_app/util/connectivity_status.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  AppRouter.setupRouter();
   runApp(MyApp());
 }
 
@@ -23,7 +23,8 @@ class MyApp extends StatelessWidget {
       ],child:MaterialApp(
         title: 'Flutter Demo',
         initialRoute: 'action_selection',
-        onGenerateRoute: AppRouter.appRouter.generator,
+        onUnknownRoute: (settings) => MaterialPageRoute(
+            builder: (context) => ActionSelectionPage()),
         theme: ThemeData(
           fontFamily: 'Montserrat',
           primarySwatch: Colors.blue,
