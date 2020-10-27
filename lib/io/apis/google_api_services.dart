@@ -5,6 +5,7 @@ import 'package:gmoh_app/io/models/place_search_response.dart';
 import 'package:gmoh_app/io/models/trip_route_response.dart';
 import 'package:gmoh_app/util/remote_config_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/places.dart';
 
 class GoogleApiService {
   static const _DOMAIN = "https://maps.googleapis.com/";
@@ -57,6 +58,7 @@ class GoogleApiService {
 
   Future<TripRouteResponse> fetchTripRoute(
       LatLng originLatLng, LatLng destinationLatLng) async {
+    if (remoteConfigHelper == null) return TripRouteResponse.onError("remoteConfig is null");
     String apiKey = remoteConfigHelper.googleApiKey;
     try {
       final path = _buildDirectionsEndPoint(

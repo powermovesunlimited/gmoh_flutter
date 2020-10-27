@@ -116,11 +116,15 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
                   children: <Widget>[
                     setupPageTitleCard(),
                     setupTripMap(initialPosition),
-                    Stack(
-                      children: [
-                        setupEditButton(),
-                        setupContinueButton()
-                      ],
+                    Container(
+                  margin: EdgeInsets.fromLTRB(24, 12, 24, 18),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(flex: 1, child: setupEditButton()),
+                      Expanded(flex: 1, child: setupContinueButton())
+                    ],
+                  ),
                     ),
                   ],
                 ),
@@ -132,7 +136,7 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
 
   Container setupContinueButton() {
     return Container(
-      margin: EdgeInsets.only(top: 8.0, right: 24.0, left: 210.0, bottom: 18.0),
+      margin: EdgeInsets.only(top: 0.0, right: 0, left: 4, bottom: 0.0),
       child: SizedBox(
         width: double.infinity,
         height: 40,
@@ -170,8 +174,7 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
 
   Container setupEditButton() {
     return Container(
-        margin: const EdgeInsets.only(
-            top: 8.0, right: 210.0, left: 24.0, bottom: 18.0),
+        margin: const EdgeInsets.only(top: 0.0, right: 4, left: 0.0, bottom: 0.0),
         child: SizedBox(
           width: double.infinity,
           height: 40,
