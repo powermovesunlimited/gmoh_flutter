@@ -80,6 +80,7 @@ class SelectRideSharePageState extends State<SelectRideSharePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        centerTitle: false,
         title: const Text('Exit'),
         backgroundColor: Colors.transparent,
         elevation: 0,
