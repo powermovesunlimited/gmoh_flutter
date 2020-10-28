@@ -8,6 +8,7 @@ class FindYourRideLoadingPage extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        centerTitle: false,
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text(

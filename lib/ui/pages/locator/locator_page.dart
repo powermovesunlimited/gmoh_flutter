@@ -99,6 +99,7 @@ abstract class LocatorPageState extends State<LocatorPage> {
             resizeToAvoidBottomInset: false,
             backgroundColor: Colors.transparent,
             appBar: AppBar(
+              centerTitle: false,
               title: const Text('Exit'),
               backgroundColor: Colors.transparent,
               leading: IconButton(
