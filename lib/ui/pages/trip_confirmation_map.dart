@@ -53,14 +53,19 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
           TripRouteResult result = snapshot.data;
           _goToStart(result.origin);
           _addMarkers(result.origin);
-          final coordinates = result.routePoints
-              .map((point) => LatLng(point.latitude, point.longitude))
-              .toList();
-          _polyline = Polyline(
-              polylineId: PolylineId("trip"),
-              color: Colors.red,
-              points: coordinates,
-              width: 5);
+
+          if (result.routePoints != null) {
+            final coordinates = result.routePoints
+                .map((point) => LatLng(point.latitude, point.longitude))
+                .toList();
+            _polyline = Polyline(
+                polylineId: PolylineId("trip"),
+                color: Colors.red,
+                points: coordinates,
+                width: 5);
+          } else {
+            _tripRouteBloc.fetchTripRoute(widget.destination, widget.origin);
+          }
         } else {
           _tripRouteBloc.fetchTripRoute(widget.destination, widget.origin);
         }
@@ -72,7 +77,7 @@ class TripConfirmationMapState extends State<TripConfirmationMap> {
   Future<void> _goToStart(LatLng start) async {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: start, zoom: 12)));
+        CameraPosition(target: start, zoom: 10)));
   }
 
   Widget buildTripConfirmationView(BuildContext context,
